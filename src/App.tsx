@@ -7,6 +7,9 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./components/pages/Home";
 function App() {
   const firebaseConfig = {
     apiKey: "AIzaSyB6FPTWzjcvVa8QkjtSQgcMDXoXN_zl5z0",
@@ -68,7 +71,12 @@ function App() {
     <div className="App-header">
       {isLoggedIn ? (
         <>
-          <h1>Hello</h1>
+          <Router>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+            </Routes>
+          </Router>
           <button onClick={handleLogout}>Log out</button>
         </>
       ) : (
