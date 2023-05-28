@@ -1,5 +1,5 @@
 .navbar {
-  background: linear-gradient(90deg, rgb(28, 27, 27) 0%, rgb(26, 23, 23) 100%);
+  background: linear-gradient(90deg, #000 0%, #70dbff 50%, #000000 100%);
   height: 80px;
   display: flex;
   justify-content: center;
@@ -23,7 +23,7 @@
   justify-self: start;
   margin-left: 20px;
   cursor: pointer;
-  text-decoration: none;
+  text-decoration: nones;
   font-size: 2rem;
   display: flex;
   align-items: center;
@@ -35,9 +35,9 @@
 }
 
 .nav-menu {
-  display: grid;
+  display: contents;
   grid-template-columns: repeat(4, auto);
-  grid-gap: 10px;
+  grid-gap: 1px;
   list-style: none;
   text-align: center;
   width: 60vw;
@@ -50,7 +50,7 @@
 }
 
 .nav-links {
-  color: #fff;
+  color: aqua;
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -59,7 +59,7 @@
 }
 
 .nav-links:hover {
-  border-bottom: 4px solid #fff;
+  border-bottom: 0px solid #fff;
   transition: all 0.2s ease-out;
 }
 
@@ -79,11 +79,22 @@
   .NavbarItems {
     position: relative;
   }
+  .navbar {
+    background: linear-gradient(90deg, #000 0%, #70dbff 50%, #000000 100%);
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
 
   .nav-menu {
-    display: flex;
+    display: grid;
     flex-direction: column;
-    width: 100%;
+    width: 300%;
     height: 90vh;
     position: absolute;
     top: 80px;

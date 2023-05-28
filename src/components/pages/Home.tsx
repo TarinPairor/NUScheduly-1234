@@ -27,7 +27,7 @@ function Home() {
     setToDo(newTaskList);
   };
 
-  const markDone = (id: number) => {
+  /*const markDone = (id: number) => {
     const newTaskList = toDo.map((task) => {
       if (task.id === id) {
         return { ...task, status: !task.status };
@@ -35,7 +35,7 @@ function Home() {
       return task;
     });
     setToDo(newTaskList);
-  };
+  };*/
 
   const cancelUpdate = () => {
     setUpdateData(null);
