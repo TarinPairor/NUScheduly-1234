@@ -1,4 +1,3 @@
-import "./App.css";
 import { ChangeEvent, useEffect, useState } from "react";
 // import { collection, getDoc, getDocs, setDoc, doc } from "firebase/firestore";
 import {
@@ -10,8 +9,8 @@ import {
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/pages/Home";
+import Flashcards from "./components/pages/Flashcards";
 import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
-
 function App() {
   useFirebaseConfig();
   // const { app, analytics, db } = useFirebaseConfig();
@@ -140,6 +139,7 @@ function App() {
             <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/flashcards" element={<Flashcards />} />
             </Routes>
           </Router>
           <button onClick={handleLogout}>Log out</button>
