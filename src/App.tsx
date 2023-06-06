@@ -9,7 +9,7 @@ import {
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/pages/Home";
-import useFirebaseConfig from "./useFirebaseConfig";
+import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
 function App() {
   useFirebaseConfig();
   const auth = getAuth();
