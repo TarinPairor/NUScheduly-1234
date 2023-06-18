@@ -23,9 +23,9 @@ function Home() {
   const [newTask, setNewTask] = useState<string>("");
   const [updateData, setUpdateData] = useState<Task | null>(null);
 
-  const userId = "qU19bsEdmdUoPkW2MxlbjDFyhGp1";
+  const userId = "HdmmR2vQXmgdPX0uSdXHGuR93hG2";
   const db = getFirestore();
-  const tasksRef = collection(db, `users/${userId}/tasks`);
+  const tasksRef = collection(db, `users/${userId}/tasks`); //path
 
   useEffect(() => {
     const unsubscribe = onSnapshot(tasksRef, (snapshot) => {
