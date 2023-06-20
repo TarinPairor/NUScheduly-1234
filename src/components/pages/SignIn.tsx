@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import useFirebaseConfig from "../Firebase/useFirebaseConfig";
+import React from "react";
 
 export default function SignIn() {
   const { auth } = useFirebaseConfig();

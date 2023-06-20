@@ -22,8 +22,6 @@ import SignIn from "./components/pages/SignIn";
 function App() {
   useFirebaseConfig();
   const { app, analytics, db } = useFirebaseConfig();
-  //const [uid, setUid] = useState<string>("");
-
   const [users, setUsers] = useState<{ id: string }[]>([]);
   const usersCollectionRef = collection(db, "users");
 
@@ -117,6 +115,7 @@ function App() {
     signOut(auth)
       .then(() => {
         setIsLoggedIn(false);
+        setUid(""); // Reset the uid state variable
       })
       .catch((error) => {
         console.log("Logout error:", error);
@@ -145,7 +144,7 @@ function App() {
           <Router>
             <Navbar />
             <Routes>
-              <Route path="/" element={<Home></Home>} />
+              <Route path="/" element={<Home userId={uid}></Home>} />
               <Route path="/flashcards" element={<Flashcards />} />
             </Routes>
           </Router>

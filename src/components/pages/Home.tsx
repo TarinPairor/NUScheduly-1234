@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import useFirebaseConfig from "../Firebase/useFirebaseConfig";
+import DatePickerValue from "../DatePickerValue";
 import {
   getFirestore,
   collection,
@@ -16,14 +17,20 @@ interface Task {
   id: string;
   title: string;
   status: boolean;
+  date: string;
 }
 
-function Home() {
+interface HomeProps {
+  userId: string;
+}
+
+function Home({ userId }: HomeProps) {
   const [toDo, setToDo] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState<string>("");
   const [updateData, setUpdateData] = useState<Task | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  const userId = "HdmmR2vQXmgdPX0uSdXHGuR93hG2";
+  //const userId = "HdmmR2vQXmgdPX0uSdXHGuR93hG2";
   const db = getFirestore();
   const tasksRef = collection(db, `users/${userId}/tasks`); //path
 
@@ -38,19 +45,25 @@ function Home() {
     });
 
     return () => unsubscribe();
-  }, [tasksRef]);
+  }, [tasksRef, userId]); // Add userId as a dependency
 
   const addTask = async () => {
-    if (newTask) {
+    if (newTask && selectedDate) {
       const num = toDo.length + 1;
       const newEntry: Task = {
         id: num.toString(),
         title: newTask,
         status: false,
+        date: selectedDate.toISOString(), // Convert the selected date to a string representation
       };
       await addDoc(tasksRef, newEntry);
       setNewTask("");
+      setSelectedDate(null);
     }
+  };
+
+  const handleDateChange = (newDate: Date | null) => {
+    setSelectedDate(newDate);
   };
 
   const deleteTask = async (id: string) => {
@@ -71,6 +84,7 @@ function Home() {
         id: updateData.id,
         title: e.target.value,
         status: updateData.status,
+        date: updateData.date, // Retain the existing date value
       };
       setUpdateData(newEntry);
     }
@@ -121,6 +135,9 @@ function Home() {
               className="form-control form-control-lg"
             />
           </div>
+          <div className="col">
+            <DatePickerValue value={selectedDate} onChange={handleDateChange} />
+          </div>
           <div className="col-auto">
             <button onClick={addTask} className="btn btn-lg btn-success">
               Add Task
@@ -148,6 +165,7 @@ function Home() {
                           id: task.id,
                           title: task.title,
                           status: task.status,
+                          date: task.date, // Include the date in the updateData state
                         })
                       }
                     >
