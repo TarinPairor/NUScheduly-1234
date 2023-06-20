@@ -21,7 +21,7 @@ import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
 import SignIn from "./components/pages/SignIn";
 function App() {
   useFirebaseConfig();
-  const { app, analytics, db } = useFirebaseConfig();
+  const { db } = useFirebaseConfig(); //const { app, analytics, db } = useFirebaseConfig();
   const [users, setUsers] = useState<{ id: string }[]>([]);
   const usersCollectionRef = collection(db, "users");
 

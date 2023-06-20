@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import useFirebaseConfig from "../Firebase/useFirebaseConfig";
+//import useFirebaseConfig from "../Firebase/useFirebaseConfig";
 import DatePickerValue from "../DatePickerValue";
 import {
   getFirestore,
@@ -92,7 +92,7 @@ function Home({ userId }: HomeProps) {
 
   const updateTask = async () => {
     if (updateData) {
-      const { id, title, status } = updateData;
+      const { title, status } = updateData; //const { id, title, status } = updateData;
       const updatedTask = { title, status };
       await updateDoc(doc(tasksRef, updateData.id), updatedTask);
       setUpdateData(null);
@@ -148,7 +148,7 @@ function Home({ userId }: HomeProps) {
 
       {toDo && toDo.length ? "" : "No Tasks..."}
       {toDo &&
-        toDo.map((task, i) => {
+        toDo.map((task) => {
           return (
             <React.Fragment key={task.id}>
               <div className="col taskBg">
