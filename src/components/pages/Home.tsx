@@ -60,26 +60,38 @@ function Home({ userId }: HomeProps) {
     return () => unsubscribe();
   }, [tasksRef]);*/
 
+  function compareDates(date1: string, date2: string): boolean {
+    return date1 >= date2;
+  }
+
   const addTask = async () => {
     if (newTask && selectedDate) {
-      const num = toDo.length + 1;
-      const newEntry: Task = {
-        id: num.toString(),
-        title: newTask,
-        status: false,
-        date: selectedDate.toISOString(),
-      };
-      const docRef = await addDoc(tasksRef, newEntry);
-      const documentId = docRef.id;
-      const taskWithDocumentId: { [key: string]: any } = {
-        ...newEntry,
-        documentId: documentId,
-      };
-      await updateDoc(doc(tasksRef, documentId), taskWithDocumentId);
-      setNewTask("");
-      setSelectedDate(null);
-      // Reload the screen
-      window.location.reload();
+      const currentDate = new Date();
+      const currentDateString = currentDate.toISOString().substring(0, 10);
+      const selectedDateString = selectedDate.toISOString().substring(0, 10);
+      if (compareDates(selectedDateString, currentDateString)) {
+        const num = toDo.length + 1;
+        const newEntry: Task = {
+          id: num.toString(),
+          title: newTask,
+          status: false,
+          date: selectedDate.toISOString(),
+        };
+        const docRef = await addDoc(tasksRef, newEntry);
+        const documentId = docRef.id;
+        const taskWithDocumentId: { [key: string]: any } = {
+          ...newEntry,
+          documentId: documentId,
+        };
+        await updateDoc(doc(tasksRef, documentId), taskWithDocumentId);
+        setNewTask("");
+        setSelectedDate(null);
+        // Reload the screen
+        window.location.reload();
+      } else {
+        // Handle the case when selectedDate is earlier than the current date
+        // For example, display an error message or show a notification to the user
+      }
     }
   };
 
@@ -149,9 +161,7 @@ function Home({ userId }: HomeProps) {
     }
   }*/
   function extractDate(str: string): string {
-    // Extract the date part from the string
     const date = str.substring(2, 10);
-
     return date;
   }
 
@@ -220,7 +230,7 @@ function Home({ userId }: HomeProps) {
                 <div className="col taskBg">
                   <div className={task.status ? "done" : ""}>
                     <span className="taskText">
-                      {task.title} {extractDate(task.date)}
+                      {task.title} {task.date}
                     </span>
                   </div>
                   <div className="iconsWrap">

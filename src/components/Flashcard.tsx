@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-interface FlashcardProps {
+export default interface FlashcardProps {
   flashcard: {
     id: number;
     question: string;
