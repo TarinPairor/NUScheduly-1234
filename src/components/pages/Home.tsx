@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 
 interface Task {
+  documentId?: string;
   id: string;
   title: string;
   status: boolean;
@@ -46,6 +47,18 @@ function Home({ userId }: HomeProps) {
 
     return () => unsubscribe();
   }, [tasksRef, userId]); // Add userId as a dependency
+  /*useEffect(() => {
+    const unsubscribe = onSnapshot(tasksRef, (snapshot) => {
+      const tasks: Task[] = [];
+      snapshot.forEach((doc) => {
+        const task = doc.data() as Task;
+        tasks.push(task);
+      });
+      setToDo(tasks);
+    });
+
+    return () => unsubscribe();
+  }, [tasksRef]);*/
 
   const addTask = async () => {
     if (newTask && selectedDate) {
@@ -54,11 +67,19 @@ function Home({ userId }: HomeProps) {
         id: num.toString(),
         title: newTask,
         status: false,
-        date: selectedDate.toISOString(), // Convert the selected date to a string representation
+        date: selectedDate.toISOString(),
       };
-      await addDoc(tasksRef, newEntry);
+      const docRef = await addDoc(tasksRef, newEntry);
+      const documentId = docRef.id;
+      const taskWithDocumentId: { [key: string]: any } = {
+        ...newEntry,
+        documentId: documentId,
+      };
+      await updateDoc(doc(tasksRef, documentId), taskWithDocumentId);
       setNewTask("");
       setSelectedDate(null);
+      // Reload the screen
+      window.location.reload();
     }
   };
 
@@ -66,9 +87,12 @@ function Home({ userId }: HomeProps) {
     setSelectedDate(newDate);
   };
 
-  const deleteTask = async (id: string) => {
+  const deleteTask = async (documentId?: string) => {
     try {
-      await deleteDoc(doc(tasksRef, id));
+      if (documentId) {
+        await deleteDoc(doc(tasksRef, documentId));
+        await window.location.reload();
+      }
     } catch (error) {
       console.error("Error deleting task:", error);
     }
@@ -98,6 +122,38 @@ function Home({ userId }: HomeProps) {
       setUpdateData(null);
     }
   };
+
+  /*function getLastTwoDigits(year: number): number {
+    const yearString = year.toString();
+    const lastTwoDigitsString = yearString.slice(-2);
+    const lastTwoDigits = parseInt(lastTwoDigitsString);
+    return lastTwoDigits;
+  }
+
+  function formatDate(date: string): string {
+    const parts = date.split("-");
+    const day = parseInt(parts[0]);
+    const month = parseInt(parts[1]);
+    const year = parseInt(parts[2]);
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const formattedMonth = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+    }).format(new Date(currentYear, month - 1, 1));
+
+    if (getLastTwoDigits(currentYear) === year) {
+      return `${day} ${formattedMonth}`;
+    } else {
+      return `${day} ${formattedMonth} (${year})`;
+    }
+  }*/
+  function extractDate(str: string): string {
+    // Extract the date part from the string
+    const date = str.substring(2, 10);
+
+    return date;
+  }
 
   return (
     <div className="container App">
@@ -148,39 +204,53 @@ function Home({ userId }: HomeProps) {
 
       {toDo && toDo.length ? "" : "No Tasks..."}
       {toDo &&
-        toDo.map((task) => {
-          return (
-            <React.Fragment key={task.id}>
-              <div className="col taskBg">
-                <div className={task.status ? "done" : ""}>
-                  {/*<span className="taskNumber">{i + 1}</span>*/}
-                  <span className="taskText">{task.title}</span>
-                </div>
-                <div className="iconsWrap">
-                  {task.status ? null : (
-                    <span
-                      title="Edit"
-                      onClick={() =>
-                        setUpdateData({
-                          id: task.id,
-                          title: task.title,
-                          status: task.status,
-                          date: task.date, // Include the date in the updateData state
-                        })
-                      }
-                    >
-                      <FontAwesomeIcon icon={faPen} />
-                    </span>
-                  )}
+        toDo
+          .sort((a, b) => {
+            const dateA = extractDate(a.date).split("-");
+            const dateB = extractDate(b.date).split("-");
 
-                  <span title="Trash" onClick={() => deleteTask(task.id)}>
-                    <FontAwesomeIcon icon={faTrashAlt} />
-                  </span>
+            const numA = Number(dateA[0] + dateA[1] + dateA[2]);
+            const numB = Number(dateB[0] + dateB[1] + dateB[2]);
+
+            return numA - numB;
+          })
+          .map((task) => {
+            return (
+              <React.Fragment key={task.id}>
+                <div className="col taskBg">
+                  <div className={task.status ? "done" : ""}>
+                    <span className="taskText">
+                      {task.title} {extractDate(task.date)}
+                    </span>
+                  </div>
+                  <div className="iconsWrap">
+                    {task.status ? null : (
+                      <span
+                        title="Edit"
+                        onClick={() =>
+                          setUpdateData({
+                            id: task.id,
+                            title: task.title,
+                            status: task.status,
+                            date: task.date,
+                          })
+                        }
+                      >
+                        <FontAwesomeIcon icon={faPen} />
+                      </span>
+                    )}
+
+                    <span
+                      title="Trash"
+                      onClick={() => deleteTask(task.documentId)}
+                    >
+                      <FontAwesomeIcon icon={faTrashAlt} />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </React.Fragment>
-          );
-        })}
+              </React.Fragment>
+            );
+          })}
     </div>
   );
 }

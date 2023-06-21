@@ -19,6 +19,7 @@ import Home from "./components/pages/Home";
 import Flashcards from "./components/pages/Flashcards";
 import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
 import SignIn from "./components/pages/SignIn";
+import Inbox from "./components/pages/Inbox";
 function App() {
   useFirebaseConfig();
   const { db } = useFirebaseConfig(); //const { app, analytics, db } = useFirebaseConfig();
@@ -146,6 +147,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home userId={uid}></Home>} />
               <Route path="/flashcards" element={<Flashcards />} />
+              <Route path="/inbox" element={<Inbox userId={uid} />} />
             </Routes>
           </Router>
           <button onClick={handleLogout}>Log out</button>
