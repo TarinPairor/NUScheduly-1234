@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 //import useFirebaseConfig from "../Firebase/useFirebaseConfig";
 import DatePickerValue from "../DatePickerValue";
 import {
@@ -87,9 +87,14 @@ function Home({ userId }: HomeProps) {
         setNewTask("");
         setSelectedDate(null);
         // Reload the screen
-        window.location.reload();
+        // window.location.reload();
       } else {
+        console.log("date must be after today!");
       }
+    } else if (!newTask) {
+      console.log("can not have empty task input!");
+    } else if (!selectedDate) {
+      console.log("must select date!");
     }
   };
 
@@ -101,7 +106,7 @@ function Home({ userId }: HomeProps) {
     try {
       if (documentId) {
         await deleteDoc(doc(tasksRef, documentId));
-        await window.location.reload();
+        //await window.location.reload();
       }
     } catch (error) {
       console.error("Error deleting task:", error);
@@ -229,11 +234,11 @@ function Home({ userId }: HomeProps) {
                 <div className="col taskBg">
                   <div className={task.status ? "done" : ""}>
                     <span className="taskText">
-                      {task.title} {task.date}
+                      {task.title} {extractDate(task.date)}
                     </span>
                   </div>
                   <div className="iconsWrap">
-                    {task.status ? null : (
+                    {/*task.status ? null : (
                       <span
                         title="Edit"
                         onClick={() =>
@@ -245,9 +250,9 @@ function Home({ userId }: HomeProps) {
                           })
                         }
                       >
-                        <FontAwesomeIcon icon={faPen} />
+                        {<FontAwesomeIcon icon={faPen} />}
                       </span>
-                    )}
+                      )*/}
 
                     <span
                       title="Trash"
