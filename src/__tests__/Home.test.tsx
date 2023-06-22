@@ -1,6 +1,5 @@
 import { expect, test } from "@jest/globals";
 //import useFirebaseConfig from "../components/Firebase/useFirebaseConfig";
-
 //useFirebaseConfig();
 //const db = getFirestore();
 //const tasksRef = collection(db, `users/HdmmR2vQXmgdPX0uSdXHGuR93hG2/tasks`); //path
@@ -55,6 +54,32 @@ test("compareDates should return the correct boolean value", () => {
   const expected = false;
   const result = compareDates(currentDate, anotherDate);
   expect(result).toBe(expected);
+});
+
+test("Sorts dates correctly", () => {
+  const dateA = "2023-06-20";
+  const dateB = "2023-06-21";
+  const sortResult = (() => {
+    const dateASplit = dateA.split("-");
+    const dateBSplit = dateB.split("-");
+    const numA = Number(dateASplit[0] + dateASplit[1] + dateASplit[2]);
+    const numB = Number(dateBSplit[0] + dateBSplit[1] + dateBSplit[2]);
+    return numA - numB;
+  })();
+  expect(sortResult).toBeLessThan(0);
+});
+
+test("Sorts dates correctly", () => {
+  const dateA = "2023-06-21";
+  const dateB = "2023-06-20";
+  const sortResult = (() => {
+    const dateASplit = dateA.split("-");
+    const dateBSplit = dateB.split("-");
+    const numA = Number(dateASplit[0] + dateASplit[1] + dateASplit[2]);
+    const numB = Number(dateBSplit[0] + dateBSplit[1] + dateBSplit[2]);
+    return numA - numB;
+  })();
+  expect(sortResult).toBeGreaterThan(0);
 });
 
 /*test("adds a new task when newTask and selectedDate are provided", async () => {

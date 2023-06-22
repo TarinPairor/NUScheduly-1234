@@ -4,17 +4,19 @@ import { FlashcardList } from "../FlashcardList";
 
 export default function Flashcards() {
   const [flashcards /*, setFlashcards*/] = useState(SAMPLE_FLASHCARDS);
-  function handleSubmit(e: { preventDefault: () => void }) {
+  {
+    /*function handleSubmit(e: { preventDefault: () => void }) {
     e.preventDefault();
+  }*/
   }
   return (
     <>
-      <form className="header" onSubmit={handleSubmit}>
+      {/*<form className="header" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="category">Category</label>
           <select id="category" data-testid="flashcard-list"></select>
         </div>
-      </form>
+  </form>*/}
       <div className="container">
         <FlashcardList flashcards={flashcards} />
       </div>
@@ -30,14 +32,14 @@ const SAMPLE_FLASHCARDS = [
   },
   {
     id: 2,
-    question: "What is 2 + 2",
-    answer: "4",
-    options: ["2", "3", "4"],
+    question: "What is 2 + 3",
+    answer: "5",
+    options: ["3", "4", "5"],
   },
   {
     id: 3,
-    question: "What is 2 + 2",
-    answer: "4",
-    options: ["2", "3", "4"],
+    question: "What is 2",
+    answer: "a number",
+    options: ["idk", "a string", "a number"],
   },
 ];

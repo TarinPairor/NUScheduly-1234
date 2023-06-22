@@ -234,7 +234,8 @@ function Home({ userId }: HomeProps) {
                 <div className="col taskBg">
                   <div className={task.status ? "done" : ""}>
                     <span className="taskText">
-                      {task.title} {extractDate(task.date)}
+                      {task.title} <br></br>
+                      {extractDate(task.date)}
                     </span>
                   </div>
                   <div className="iconsWrap">
