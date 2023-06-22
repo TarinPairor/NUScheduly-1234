@@ -3,7 +3,7 @@ import "./Flashcards.css";
 import { FlashcardList } from "../FlashcardList";
 
 export default function Flashcards() {
-  const [flashcards, setFlashcards] = useState(SAMPLE_FLASHCARDS);
+  const [flashcards /*, setFlashcards*/] = useState(SAMPLE_FLASHCARDS);
   function handleSubmit(e: { preventDefault: () => void }) {
     e.preventDefault();
   }
@@ -12,7 +12,7 @@ export default function Flashcards() {
       <form className="header" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="category">Category</label>
-          <select id="category"></select>
+          <select id="category" data-testid="flashcard-list"></select>
         </div>
       </form>
       <div className="container">

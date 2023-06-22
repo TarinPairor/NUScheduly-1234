@@ -89,8 +89,6 @@ function Home({ userId }: HomeProps) {
         // Reload the screen
         window.location.reload();
       } else {
-        // Handle the case when selectedDate is earlier than the current date
-        // For example, display an error message or show a notification to the user
       }
     }
   };
@@ -160,6 +158,7 @@ function Home({ userId }: HomeProps) {
       return `${day} ${formattedMonth} (${year})`;
     }
   }*/
+
   function extractDate(str: string): string {
     const date = str.substring(2, 10);
     return date;

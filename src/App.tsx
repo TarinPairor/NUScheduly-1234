@@ -13,15 +13,14 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/pages/Home";
 import Flashcards from "./components/pages/Flashcards";
 import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
-import SignIn from "./components/pages/SignIn";
+//import SignIn from "./components/pages/SignIn";
 import Inbox from "./components/pages/Inbox";
 function App() {
-  useFirebaseConfig();
   const { db } = useFirebaseConfig(); //const { app, analytics, db } = useFirebaseConfig();
   const [users, setUsers] = useState<{ id: string }[]>([]);
   const usersCollectionRef = collection(db, "users");
@@ -170,12 +169,12 @@ function App() {
           />
 
           <button onClick={addData}>Log In</button>
-          <Router>
+          {/*<Router>
             <Link to="/signin">Sign in</Link>
             <Routes>
               <Route path="/signin" element={<SignIn />} />
             </Routes>
-          </Router>
+      </Router>*/}
           {/*<button onClick={() => navigate("/signin")}>Go to Sign In</button>*/}
           <></>
         </>

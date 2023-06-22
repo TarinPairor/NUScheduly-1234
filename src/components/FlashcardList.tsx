@@ -12,8 +12,12 @@ interface FlashcardListProps {
 export function FlashcardList({ flashcards }: FlashcardListProps) {
   return (
     <div className="card-grid">
-      {flashcards.map((flashcard) => (
-        <Flashcard flashcard={flashcard} key={flashcard.id} />
+      {flashcards.map((flashcard, index) => (
+        <Flashcard
+          flashcard={flashcard}
+          key={flashcard.id}
+          data-testid={`flashcard-${index}`}
+        />
       ))}
     </div>
   );
