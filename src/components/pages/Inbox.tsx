@@ -21,19 +21,7 @@ interface InboxProps {
 }
 
 function Inbox({ userId }: InboxProps) {
-  let [toDo, setToDo] = useState<Task[]>([]);
-  /*useEffect(() => {
-    const unsubscribe = onSnapshot(tasksRef, (snapshot) => {
-      const tasks: Task[] = [];
-      snapshot.forEach((doc) => {
-        const task = doc.data() as Task;
-        tasks.push(task);
-      });
-      setToDo(tasks);
-    });
-
-    return () => unsubscribe();
-  }, [tasksRef]);*/
+  const [, setToDo] = useState<Task[]>([]);
 
   const deleteTask = async (documentId?: string) => {
     try {
