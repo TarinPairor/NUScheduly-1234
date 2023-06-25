@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { test } from "@jest/globals";
 import "@testing-library/jest-dom/extend-expect";
 import { Flashcard } from "../components/Flashcard";
-import FlashcardProps from "../components/Flashcard";
+import FlashcardProps from "../components/Interfaces/FlashcardProps";
 
 const mockFlashcard: FlashcardProps = {
   flashcard: {
