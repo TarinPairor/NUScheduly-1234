@@ -83,14 +83,6 @@ function Inbox({ userId }: InboxProps) {
             <span title="Trash" onClick={() => deleteTask(task.documentId)}>
               <FontAwesomeIcon icon={faTrashAlt} />
             </span>
-            {/* <div className="iconsWrap">
-              <span title="Edit">
-                <FontAwesomeIcon icon={faPen} />
-              </span>
-              <span title="Trash">
-                <FontAwesomeIcon icon={faTrashAlt} />
-              </span>
-        </div>*/}
           </div>
         ))
       )}

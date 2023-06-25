@@ -1,13 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-
-export default interface FlashcardProps {
-  flashcard: {
-    id: number;
-    question: string;
-    answer: string;
-    options: string[];
-  };
-}
+import FlashcardProps from "./Interfaces/FlashcardProps";
 
 export function Flashcard({ flashcard }: FlashcardProps) {
   const [flip, setFlip] = useState(false);

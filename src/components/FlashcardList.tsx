@@ -1,15 +1,7 @@
 import { Flashcard } from "./Flashcard";
+import FlashcardListProps from "./Interfaces/FlashcardListProps";
 
-interface FlashcardProps {
-  flashcards: {
-    id: number;
-    question: string;
-    answer: string;
-    options: string[];
-  }[];
-}
-
-export function FlashcardList({ flashcards }: FlashcardProps) {
+export function FlashcardList({ flashcards }: FlashcardListProps) {
   return (
     <div className="card-grid">
       {flashcards.map((flashcard, index) => (

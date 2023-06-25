@@ -18,10 +18,9 @@ import Navbar from "./components/Navbar";
 import Home from "./components/pages/Home";
 import Flashcards from "./components/pages/Flashcards";
 import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
-//import SignIn from "./components/pages/SignIn";
 import Inbox from "./components/pages/Inbox";
 function App() {
-  const { db } = useFirebaseConfig(); //const { app, analytics, db } = useFirebaseConfig();
+  const { db } = useFirebaseConfig();
   const [users, setUsers] = useState<{ id: string }[]>([]);
   const usersCollectionRef = collection(db, "users");
   const [uid, setUid] = useState<string>("");
@@ -100,18 +99,6 @@ function App() {
     }
   };
 
-  /*const addLoginData = () => {
-    signInWithEmailAndPassword(auth, data.email, data.password)
-      .then((userCredential) => {
-        const uid = userCredential.user.uid;
-        setUid(uid);
-        setIsLoggedIn(true);
-      })
-      .catch((error) => {
-        console.log("Login error:", error);
-      });
-  };*/
-
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -170,13 +157,6 @@ function App() {
           />
 
           <button onClick={addData}>Log In</button>
-          {/*<Router>
-            <Link to="/signin">Sign in</Link>
-            <Routes>
-              <Route path="/signin" element={<SignIn />} />
-            </Routes>
-      </Router>*/}
-          {/*<button onClick={() => navigate("/signin")}>Go to Sign In</button>*/}
           <></>
         </>
       )}
