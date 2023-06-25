@@ -12,14 +12,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-
-interface Task {
-  documentId?: string;
-  id: string;
-  title: string;
-  status: boolean;
-  date: string;
-}
+import Task from "../Interfaces/Task";
 
 interface HomeProps {
   userId: string;
@@ -219,6 +212,7 @@ function Home({ userId }: HomeProps) {
       {toDo && toDo.length ? "" : "No Tasks..."}
       {toDo &&
         toDo
+          .slice(0, 4)
           .sort((a, b) => {
             const dateA = extractDate(a.date).split("-");
             const dateB = extractDate(b.date).split("-");

@@ -3,6 +3,14 @@ import App from "../App";
 import "@testing-library/jest-dom/extend-expect";
 import "firebase/auth";
 import { getAuth, User, NextOrObserver } from "firebase/auth";
+import { shallow } from "enzyme";
+
+describe("renders <App />", () => {
+  it("should pass shallow snapshot test", () => {
+    const wrapper = shallow(<App />);
+    expect(wrapper).toMatchSnapshot();
+  });
+});
 
 test("renders email input field", () => {
   render(<App />);

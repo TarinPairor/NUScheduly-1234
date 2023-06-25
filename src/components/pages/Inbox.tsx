@@ -8,14 +8,8 @@ import {
 } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import Task from "../Interfaces/Task";
 
-interface Task {
-  documentId?: string;
-  id: string;
-  title: string;
-  status: boolean;
-  date: string;
-}
 interface InboxProps {
   userId: string;
 }

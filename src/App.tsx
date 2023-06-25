@@ -24,6 +24,7 @@ function App() {
   const { db } = useFirebaseConfig(); //const { app, analytics, db } = useFirebaseConfig();
   const [users, setUsers] = useState<{ id: string }[]>([]);
   const usersCollectionRef = collection(db, "users");
+  const [uid, setUid] = useState<string>("");
 
   useEffect(() => {
     const getUsers = async () => {
@@ -93,12 +94,12 @@ function App() {
       console.log("New task document ID:", taskRef.id);
 
       setIsLoggedIn(true);
+      console.log("Welcome to the Home page");
     } catch (error) {
       console.log("Login error:", error);
     }
   };
 
-  const [uid, setUid] = useState<string>("");
   /*const addLoginData = () => {
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
