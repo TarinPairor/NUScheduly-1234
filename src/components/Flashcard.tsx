@@ -1,13 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-
-interface FlashcardProps {
-  flashcard: {
-    id: number;
-    question: string;
-    answer: string;
-    options: string[];
-  };
-}
+import FlashcardProps from "./Interfaces/FlashcardProps";
 
 export function Flashcard({ flashcard }: FlashcardProps) {
   const [flip, setFlip] = useState(false);
@@ -39,7 +31,7 @@ export function Flashcard({ flashcard }: FlashcardProps) {
       style={{ height: height }}
       onClick={() => setFlip(!flip)}
     >
-      <div className="front" ref={frontEl}>
+      <div className="front" ref={frontEl} data-testid="flashcard-front">
         {flashcard.question}
         <div className="flashcard-options">
           {flashcard.options.map((option) => (
@@ -49,10 +41,9 @@ export function Flashcard({ flashcard }: FlashcardProps) {
           ))}
         </div>
       </div>
-      <div className="back" ref={backEl}>
+      <div className="back" ref={backEl} data-testid="flashcard-back">
         {flashcard.answer}
       </div>
     </div>
   );
 }
-

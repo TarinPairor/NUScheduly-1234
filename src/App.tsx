@@ -1,117 +1,12 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Home from "./components/pages/Home";
-import Flashcards from "./components/pages/Flashcards";
-import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
+import { ChangeEvent, useEffect, useState } from "react";
 import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
-import { addDoc, collection } from "firebase/firestore";
-import { User } from "firebase/auth";
-
-function App() {
-  const { db, auth } = useFirebaseConfig();
-  const [user, setUser] = useState<User | null>(null); // Specify the type as User | null
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [auth]);
-
-  return (
-    <div className="App-header">
-      {user ? (
-        <>
-          <Router>
-            <Navbar user={user} />
-            <Routes>
-              <Route path="/" element={<Home db={db} user={user} />} />
-              <Route path="/flashcards" element={<Flashcards />} />
-            </Routes>
-          </Router>
-          <button onClick={() => signOut(auth)}>Log out</button>
-        </>
-      ) : (
-        <Login db={db} auth={auth} />
-      )}
-    </div>
-  );
-}
-
-function Login({ db, auth }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-      console.log("Logged in as:", user.uid);
-    } catch (error) {
-      console.log("Login error:", error);
-    }
-  };
-
-  const handleSignUp = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-      console.log("Signed up as:", user.uid);
-
-      // Create an empty task list for the user
-      const taskListRef = collection(db, "taskLists");
-      await addDoc(taskListRef, { userId: user.uid, tasks: [] });
-    } catch (error) {
-      console.log("Sign up error:", error);
-    }
-  };
-
-  return (
-    <>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button onClick={handleLogin}>Log in</button>
-      <button onClick={handleSignUp}>Sign up</button>
-    </>
-  );
-}
-
-export default App;
-
-//Previous app
-/*import { ChangeEvent, useEffect, useState } from "react";
-// import { collection, getDoc, getDocs, setDoc, doc } from "firebase/firestore";
+  collection,
+  getDoc,
+  getDocs,
+  setDoc,
+  doc,
+  addDoc,
+} from "firebase/firestore";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -123,40 +18,38 @@ import Navbar from "./components/Navbar";
 import Home from "./components/pages/Home";
 import Flashcards from "./components/pages/Flashcards";
 import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
-import { collection, doc, getDocs, getDoc, setDoc } from "firebase/firestore";
-function App() {
-  useFirebaseConfig();
-  const { app, analytics, db } = useFirebaseConfig();
-  const [uid, setUid] = useState<string>("");
+import Inbox from "./components/pages/Inbox";
 
+function App() {
+  const { db } = useFirebaseConfig();
   const [users, setUsers] = useState<{ id: string }[]>([]);
   const usersCollectionRef = collection(db, "users");
+  const [uid, setUid] = useState<string>("");
+  useEffect(() => {
+    const getUsers = async () => {
+      const data = await getDocs(usersCollectionRef);
+      setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
 
-  const getUsers = async () => {
-    const querySnapshot = await getDocs(usersCollectionRef);
-    const userData: { id: string }[] = [];
-
-    if (!querySnapshot.empty) {
-      querySnapshot.forEach((doc) => {
-        userData.push({ ...(doc.data() as { id: string }), id: doc.id });
+      users.map((user) => {
+        console.log(user);
       });
-    }
+    };
 
-    setUsers(userData);
-  };
-
+    getUsers();
+  }, []);
+  ////
   const auth = getAuth();
   const [data, setData] = useState({
     email: "",
     password: "",
   });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); //login 0 
 
   const handleInputs = (event: ChangeEvent<HTMLInputElement>) => {
     const inputs = { [event.target.name]: event.target.value };
     setData({ ...data, ...inputs });
   };
-  
+  ////
   const addData = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
@@ -176,59 +69,41 @@ function App() {
       const userDoc = await getDoc(userRef);
       console.log(`userDoc: ${userDoc.data()}`);
 
-      //const existingData = userDoc.data();
-
-      // Merge the existing data with the new data, while preserving the existing "xp" value
-
-      if (!userDoc.exists) {
-        // Document exists, retrieve existing data
-        const existingData = userDoc.data();
-        const newData = null;
-        if (existingData) {
-          // Merge the existing data with the new data, while preserving the existing "xp" value
-          const newData = {
-            ...existingData,
-            position: existingData.position, // Add any additional user data fields you want to update or add
-          };
-        } else {
-          // Handle the case when existingData is undefined
-          console.log("Existing data is undefined");
-        }
-
+      if (userDoc.exists()) {
         console.log("successful login");
-        // Update the document in the "users" collection with the merged data
-        await setDoc(doc(db, "users", uid), newData);
-      } else {
-        // Document does not exist, create a new document with default values
-        const newData = {
-          position: "student", // Add any additional user data fields you want to store
-        };
 
+        // Update the document in the "users" collection
+        await setDoc(userRef, { position: "student" }); // Update position to "student"
+      } else {
         console.log("successful login, creating new entry in db");
 
-        // Create a new document in the "users" collection with the user data
-        await setDoc(doc(db, "users", uid), newData);
+        // Create a new document in the "users" collection with default values
+        const newData = {
+          position: "student",
+        };
+
+        await setDoc(userRef, newData);
       }
+
+      // Create a new task document in the "users/userId/tasks" collection
+      const tasksCollectionRef = collection(db, `users/${uid}/tasks`);
+      const taskData = null;
+
+      const taskRef = await addDoc(tasksCollectionRef, taskData);
+      console.log("New task document ID:", taskRef.id);
+
       setIsLoggedIn(true);
+      console.log("Welcome to the Home page");
     } catch (error) {
       console.log("Login error:", error);
     }
-  };
-
-  const addLoginData = () => {
-    signInWithEmailAndPassword(auth, data.email, data.password)
-      .then(() => {
-        setIsLoggedIn(true);
-      })
-      .catch((error) => {
-        console.log("Login error:", error);
-      });
   };
 
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
         setIsLoggedIn(false);
+        setUid(""); // Reset the uid state variable
       })
       .catch((error) => {
         console.log("Logout error:", error);
@@ -238,6 +113,8 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        const uid = user.uid;
+        setUid(uid);
         setIsLoggedIn(true);
       } else {
         setIsLoggedIn(false);
@@ -248,7 +125,6 @@ function App() {
       unsubscribe();
     };
   }, [auth]);
-
   return (
     <div className="App-header">
       {isLoggedIn ? (
@@ -256,8 +132,9 @@ function App() {
           <Router>
             <Navbar />
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Home userId={uid}></Home>} />
               <Route path="/flashcards" element={<Flashcards />} />
+              <Route path="/inbox" element={<Inbox userId={uid} />} />
             </Routes>
           </Router>
           <button onClick={handleLogout}>Log out</button>
@@ -278,11 +155,13 @@ function App() {
             className="input-fields"
             onChange={(event) => handleInputs(event)}
           />
-          <button onClick={addLoginData}>Log In</button>
+
+          <button onClick={addData}>Log In</button>
+          <></>
         </>
       )}
     </div>
   );
 }
 
-export default App;*/
+export default App;
