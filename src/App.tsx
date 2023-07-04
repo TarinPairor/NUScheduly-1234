@@ -164,68 +164,29 @@
 //   );
 // }
 
-import { useState } from "react";
-import Login from "./homeComponents/Login";
-import SignUp from "./homeComponents/Signup";
-import Home from "./components/pages/Home";
+//
 
-// MUI imports
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import theme from "@mui/material/styles";
+import React, { useState, useEffect } from "react";
+import Home from "./components/pages/Home";
+import Signup from "./homeComponents/Signup";
+import Login from "./homeComponents/Login";
+import { BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
-  const [isSignUp, setIsSignUp] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [uid, setUid] = useState("");
-
-  const toggleMode = () => {
-    setIsSignUp(!isSignUp);
-  };
-
   return (
-    <div>
-      {!isLoggedIn &&
-        (isSignUp ? (
-          <SignUp setIsSignUp={setIsSignUp} />
-        ) : (
-          <Login setIsLoggedIn={setIsLoggedIn} setUid={setUid} />
-        ))}
-      {!isLoggedIn && (
-        <ThemeProvider theme={theme}>
-          <Container maxWidth="xs">
-            <Box
-              sx={{
-                marginTop: 1,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Button
-                onClick={toggleMode}
-                fullWidth
-                variant="contained"
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  fontWeight: 700,
-                }}
-              >
-                {isSignUp ? "Switch to Login" : "Switch to Sign Up"}
-              </Button>
-            </Box>
-          </Container>
-        </ThemeProvider>
-      )}
-      <div>{isLoggedIn && <Home userId={uid} />}</div>
-    </div>
+    <Router>
+      <div>
+        <section>
+          <Routes>
+            {" "}
+            <Route path="/" element={<Home userId={""} />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </section>
+      </div>
+    </Router>
   );
 }
 
