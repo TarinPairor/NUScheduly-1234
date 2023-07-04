@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 
-function Navbar({ user }) {
+function Navbar() {
   const [click, setClick] = useState(false);
 
   const handleClick = () => setClick(!click);
@@ -52,7 +52,7 @@ function Navbar({ user }) {
 
             {/* Example usage: Display user's name */}
             <li className="nav-item">
-              <span className="nav-links">Welcome, {user.displayName}</span>
+              {/*<span className="nav-links">Welcome, {user.displayName}</span>*/}
             </li>
           </ul>
         </div>
