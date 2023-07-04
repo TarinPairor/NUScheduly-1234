@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { auth } from "../components/Firebase/useFirebaseConfig";
 import DatePickerValue from "../components/DatePickerValue";
 import {
   getFirestore,
@@ -15,10 +14,10 @@ import {
 import Task from "../components/Interfaces/Task";
 
 interface HomeProps {
-  userId: string;
+  uid: string;
 }
 
-function Home(userID: HomeProps) {
+function Home(uid: HomeProps) {
   // const [uid, setUid] = useState<string | null>(null);
 
   // useEffect(() => {

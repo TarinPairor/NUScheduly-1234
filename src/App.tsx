@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { signOut } from "firebase/auth";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -15,6 +15,13 @@ import Container from "@mui/material/Container";
 import SignUp from "./homeComponents/Signup";
 
 function App() {
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
   const [isSignUp, setIsSignUp] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [uid, setUid] = useState("");
@@ -22,13 +29,21 @@ function App() {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        setIsLoggedIn(false);
-        setUid(""); // Reset the uid state variable
+        if (isMountedRef.current) {
+          setIsLoggedIn(false);
+          setUid(""); // Reset the uid state variable
+        }
       })
       .catch((error) => {
         console.log("Logout error:", error);
       });
   };
+  useEffect(() => {
+    return () => {
+      // Cleanup function to be executed when the component is unmounted
+      // Cancel any ongoing asynchronous tasks or subscriptions here
+    };
+  }, []);
 
   const toggleMode = () => {
     setIsSignUp(!isSignUp);
@@ -75,7 +90,7 @@ function App() {
             <Router>
               <Navbar />
               <Routes>
-                <Route path="/" element={<Home userId={uid}></Home>} />
+                <Route path="/" element={<Home uid={uid}></Home>} />
                 <Route path="/flashcards" element={<Flashcards />} />
                 <Route path="/inbox" element={<Inbox userId={uid} />} />
               </Routes>

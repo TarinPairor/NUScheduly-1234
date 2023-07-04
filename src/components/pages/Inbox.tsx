@@ -34,16 +34,18 @@ function Inbox({ userId }: InboxProps) {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(tasksRef, (snapshot) => {
+      console.log("Snapshot changes:", snapshot);
       const tasks: Task[] = [];
       snapshot.forEach((doc) => {
         const task = doc.data() as Task;
         tasks.push(task);
       });
+      console.log("Tasks:", tasks);
       setTasks(tasks);
     });
 
     return () => unsubscribe();
-  }, [tasksRef, userId, tasks]);
+  }, [tasksRef, userId]);
 
   function extractDate(str: string): string {
     // Extract the date part from the string
