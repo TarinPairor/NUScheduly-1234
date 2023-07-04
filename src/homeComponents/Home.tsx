@@ -18,22 +18,22 @@ interface HomeProps {
   userId: string;
 }
 
-function Home() {
-  const [uid, setUid] = useState<string | null>(null);
+function Home(userID: HomeProps) {
+  // const [uid, setUid] = useState<string | null>(null);
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUid(user.uid);
-      } else {
-        // User is not logged in
-        setUid(null);
-      }
-    });
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged((user) => {
+  //     if (user) {
+  //       setUid(user.uid);
+  //     } else {
+  //       // User is not logged in
+  //       setUid(null);
+  //     }
+  //   });
 
-    // Clean up the listener when the component unmounts
-    return () => unsubscribe();
-  }, []);
+  //   // Clean up the listener when the component unmounts
+  //   return () => unsubscribe();
+  // }, []);
   const [toDo, setToDo] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
