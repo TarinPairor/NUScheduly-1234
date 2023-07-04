@@ -22,28 +22,41 @@ import Inbox from "./components/pages/Inbox";
 
 function App() {
   const { db } = useFirebaseConfig();
-  const [users, setUsers] = useState<{ id: string }[]>([]);
+  const [, /*users*/ setUsers] = useState<{ id: string }[]>([]);
   const usersCollectionRef = collection(db, "users");
   const [uid, setUid] = useState<string>("");
   useEffect(() => {
-    const getUsers = async () => {
-      const data = await getDocs(usersCollectionRef);
-      setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    let isMounted = true; // Add a flag to track component mount state
 
-      users.map((user) => {
-        console.log(user);
-      });
+    const getUsers = async () => {
+      try {
+        const data = await getDocs(usersCollectionRef);
+        if (isMounted) {
+          setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        }
+        data.docs.map((user) => {
+          console.log(user);
+        });
+      } catch (error) {
+        console.log("Error fetching users:", error);
+      }
     };
 
     getUsers();
+
+    // Cleanup function to cancel async tasks and subscriptions
+    return () => {
+      isMounted = false;
+    };
   }, []);
+
   ////
   const auth = getAuth();
   const [data, setData] = useState({
     email: "",
     password: "",
   });
-  const [isLoggedIn, setIsLoggedIn] = useState(false); //login 0 
+  const [isLoggedIn, setIsLoggedIn] = useState(false); //login 0
 
   const handleInputs = (event: ChangeEvent<HTMLInputElement>) => {
     const inputs = { [event.target.name]: event.target.value };
