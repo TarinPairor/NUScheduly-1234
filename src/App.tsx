@@ -1,4 +1,96 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useState } from "react";
+import { signOut } from "firebase/auth";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./homeComponents/Home";
+import Flashcards from "./components/pages/Flashcards";
+import Inbox from "./components/pages/Inbox";
+import Login from "./homeComponents/Login";
+import { auth } from "./components/Firebase/useFirebaseConfig";
+
+// MUI imports
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import SignUp from "./homeComponents/Signup";
+
+function App() {
+  const [isSignUp, setIsSignUp] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [uid, setUid] = useState("");
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        setIsLoggedIn(false);
+        setUid(""); // Reset the uid state variable
+      })
+      .catch((error) => {
+        console.log("Logout error:", error);
+      });
+  };
+
+  const toggleMode = () => {
+    setIsSignUp(!isSignUp);
+  };
+
+  return (
+    <div>
+      {!isLoggedIn &&
+        (isSignUp ? (
+          <SignUp setIsSignUp={setIsSignUp} />
+        ) : (
+          <Login setIsLoggedIn={setIsLoggedIn} setUid={setUid} />
+        ))}
+      {!isLoggedIn && (
+        <>
+          <Container maxWidth="xs">
+            <Box
+              sx={{
+                marginTop: 1,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                onClick={toggleMode}
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  fontWeight: 700,
+                }}
+              >
+                {isSignUp ? "Switch to Login" : "Switch to Sign Up"}
+              </Button>
+            </Box>
+          </Container>
+        </>
+      )}
+      <div>
+        {isLoggedIn && (
+          <>
+            <Router>
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<Home userId={uid}></Home>} />
+                <Route path="/flashcards" element={<Flashcards />} />
+                <Route path="/inbox" element={<Inbox userId={uid} />} />
+              </Routes>
+            </Router>
+            <button onClick={handleLogout}>Log out</button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+/*import { ChangeEvent, useEffect, useState } from "react";
 import {
   collection,
   getDoc,
@@ -15,9 +107,9 @@ import {
 } from "firebase/auth";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Home from "./components/pages/Home";
+import Home from "./homeComponents/Home";
 import Flashcards from "./components/pages/Flashcards";
-import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
+import { useFirebaseConfig } from "./components/Firebase/useFirebaseConfig";
 import Inbox from "./components/pages/Inbox";
 
 function App() {
@@ -187,4 +279,4 @@ function App() {
 //   );
 // }
 
-// export default App;
+// export default App;*/

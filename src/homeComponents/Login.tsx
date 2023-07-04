@@ -1,30 +1,48 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useFirebaseConfig } from "../components/Firebase/useFirebaseConfig";
 import {
   collection,
   getDoc,
   getDocs,
   setDoc,
   doc,
-  addDoc,
+  DocumentData,
 } from "firebase/firestore";
 import {
   getAuth,
   signInWithEmailAndPassword,
-  signOut,
   onAuthStateChanged,
+  UserCredential,
 } from "firebase/auth";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Home from "../components/pages/Home";
-import Flashcards from "../components/pages/Flashcards";
-import useFirebaseConfig from "../components/Firebase/useFirebaseConfig";
-import Inbox from "../components/pages/Inbox";
 
-export default function Login({ setIsLoggedIn, setUid }) {
+// MUI imports
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Backdrop from "@mui/material/Backdrop";
+
+interface LoginProps {
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setUid: React.Dispatch<React.SetStateAction<string>>;
+}
+
+interface UserData {
+  xp: number;
+  position: string;
+}
+
+export default function Login({ setIsLoggedIn, setUid }: LoginProps) {
   const { db } = useFirebaseConfig();
-  const [users, setUsers] = useState<{ id: string }[]>([]);
+  const [isWrong] = useState<boolean>(false);
+
+  // current database of users
+  const [users, setUsers] = useState<DocumentData[]>([]);
   const usersCollectionRef = collection(db, "users");
-  const [uid, setUid] = useState<string>("");
+
   useEffect(() => {
     const getUsers = async () => {
       const data = await getDocs(usersCollectionRef);
@@ -37,30 +55,29 @@ export default function Login({ setIsLoggedIn, setUid }) {
 
     getUsers();
   }, []);
-  ////
+
   const auth = getAuth();
-  const [data, setData] = useState({
+  const [data, setData] = useState<{ email: string; password: string }>({
     email: "",
     password: "",
   });
-  const [isLoggedIn, setIsLoggedIn] = useState(false); //login 0
 
-  const handleInputs = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleInputs = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputs = { [event.target.name]: event.target.value };
     setData({ ...data, ...inputs });
   };
-  ////
-  const addData = async (e: { preventDefault: () => void }) => {
+
+  const addData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(
+      const userCredential: UserCredential = await signInWithEmailAndPassword(
         auth,
         data.email,
         data.password
       );
 
       // Get the user ID
-      const uid = userCredential.user.uid;
+      const uid: string = userCredential.user.uid;
       setUid(uid);
       console.log(`uid: ${uid}`);
 
@@ -70,52 +87,53 @@ export default function Login({ setIsLoggedIn, setUid }) {
       console.log(`userDoc: ${userDoc.data()}`);
 
       if (userDoc.exists()) {
-        console.log("successful login");
+        // Document exists, retrieve existing data
+        const existingData: UserData = userDoc.data() as UserData;
 
-        // Update the document in the "users" collection
-        await setDoc(userRef, { position: "student" }); // Update position to "student"
-      } else {
-        console.log("successful login, creating new entry in db");
-
-        // Create a new document in the "users" collection with default values
-        const newData = {
-          position: "student",
+        // Merge the existing data with the new data, while preserving the existing "xp" value
+        const newData: UserData = {
+          ...existingData,
+          xp: existingData.xp,
+          position: existingData.position, // Add any additional user data fields you want to update or add
         };
 
-        await setDoc(userRef, newData);
+        console.log("successful login");
+        // Update the document in the "users" collection with the merged data
+        await setDoc(doc(db, "users", uid), newData);
+      } else {
+        // Document does not exist, create a new document with default values
+        const newData: UserData = {
+          xp: 0,
+          position: "normal", // Add any additional user data fields you want to store
+        };
+
+        console.log("successful login, creating new entry in db");
+
+        // Create a new document in the "users" collection with the user data
+        await setDoc(doc(db, "users", uid), newData);
       }
-
-      // Create a new task document in the "users/userId/tasks" collection
-      const tasksCollectionRef = collection(db, `users/${uid}/tasks`);
-      const taskData = null;
-
-      const taskRef = await addDoc(tasksCollectionRef, taskData);
-      console.log("New task document ID:", taskRef.id);
-
       setIsLoggedIn(true);
-      console.log("Welcome to the Home page");
     } catch (error) {
       console.log("Login error:", error);
-    }
-  };
+      /*
+      if (
+        error.code === "auth/wrong-password" ||
+        error.code === "auth/missing-password"
+      ) {
+        setIsWrong(true);
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        setIsLoggedIn(false);
-        setUid(""); // Reset the uid state variable
-      })
-      .catch((error) => {
-        console.log("Logout error:", error);
-      });
+        setTimeout(() => {
+          setIsWrong(false);
+        }, 2000);
+      }*/
+    }
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        const uid = user.uid;
-        setUid(uid);
-        setIsLoggedIn(true);
+        //setIsLoggedIn(true);
+        // const uid = user.uid;
       } else {
         setIsLoggedIn(false);
       }
@@ -124,117 +142,106 @@ export default function Login({ setIsLoggedIn, setUid }) {
     return () => {
       unsubscribe();
     };
-  }, [auth]);
-  return (
-    <div className="App-header">
-      {isLoggedIn ? (
-        <>
-          <Router>
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Home userId={uid}></Home>} />
-              <Route path="/flashcards" element={<Flashcards />} />
-              <Route path="/inbox" element={<Inbox userId={uid} />} />
-            </Routes>
-          </Router>
-          <button onClick={handleLogout}>Log out</button>
-        </>
-      ) : (
-        <>
-          <input
-            placeholder="Email"
-            name="email"
-            type="email"
-            className="input-fields"
-            onChange={(event) => handleInputs(event)}
-          />
-          <input
-            placeholder="Password"
-            name="password"
-            type="password"
-            className="input-fields"
-            onChange={(event) => handleInputs(event)}
-          />
+  }, []);
 
-          <button onClick={addData}>Log In</button>
-          <></>
-        </>
-      )}
-    </div>
+  // format taken from https://github.com/mui/material-ui/blob/v5.13.2/docs/data/material/getting-started/templates/sign-in/SignIn.js
+  return (
+    <>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "#29a2ed" }}></Avatar>
+          <Typography component="h1" variant="h5">
+            Log In
+          </Typography>
+          <Box component="form" onSubmit={addData} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                handleInputs(event)
+              }
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                handleInputs(event)
+              }
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{
+                mt: 3,
+                mb: 2,
+                fontWeight: 700,
+              }}
+            >
+              Sign In
+            </Button>
+          </Box>
+          {isWrong && (
+            <Backdrop
+              sx={{ color: "#FFF", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={isWrong}
+            >
+              <Box
+                sx={{
+                  marginTop: 10,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  sx={{
+                    mt: 1,
+                    backgroundColor: "#c41e16",
+                    borderRadius: 2,
+                    padding: 1,
+                  }}
+                >
+                  <Typography component="h1" variant="h5">
+                    wrong password
+                  </Typography>
+                </Box>
+                <Box sx={{ mt: 1 }}></Box>
+              </Box>
+            </Backdrop>
+          )}
+        </Box>
+      </Container>
+    </>
   );
 }
 
-// import React, { useState } from "react";
-// import { signInWithEmailAndPassword } from "firebase/auth";
-// import { auth } from "../components/Firebase/useFirebaseConfig";
-// import { NavLink, useNavigate } from "react-router-dom";
-
-// const Login = () => {
-//   const navigate = useNavigate();
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-
-//   const onLogin = (e: { preventDefault: () => void }) => {
-//     e.preventDefault();
-//     signInWithEmailAndPassword(auth, email, password)
-//       .then((userCredential) => {
-//         // Signed in
-//         const user = userCredential.user;
-//         navigate("/home");
-//         console.log(user);
-//       })
-//       .catch((error) => {
-//         const errorCode = error.code;
-//         const errorMessage = error.message;
-//         console.log(errorCode, errorMessage);
-//       });
-//   };
-
-//   return (
-//     <>
-//       <main>
-//         <section>
-//           <div>
-//             <p> FocusApp </p>
-
-//             <form>
-//               <div>
-//                 <label htmlFor="email-address">Email address</label>
-//                 <input
-//                   id="email-address"
-//                   name="email"
-//                   type="email"
-//                   required
-//                   placeholder="Email address"
-//                   onChange={(e) => setEmail(e.target.value)}
-//                 />
-//               </div>
-
-//               <div>
-//                 <label htmlFor="password">Password</label>
-//                 <input
-//                   id="password"
-//                   name="password"
-//                   type="password"
-//                   required
-//                   placeholder="Password"
-//                   onChange={(e) => setPassword(e.target.value)}
-//                 />
-//               </div>
-
-//               <div>
-//                 <button onClick={onLogin}>Login</button>
-//               </div>
-//             </form>
-
-//             <p className="text-sm text-white text-center">
-//               No account yet? <NavLink to="/signup">Sign up</NavLink>
-//             </p>
-//           </div>
-//         </section>
-//       </main>
-//     </>
-//   );
+// const handleLogout = () => {
+//   signOut(auth)
+//     .then(() => {
+//       setIsLoggedIn(false);
+//     })
+//     .catch((error) => {
+//       console.log("Logout error:", error);
+//     });
 // };
-
-// export default Login;

@@ -1,242 +1,243 @@
-import { ChangeEvent, useEffect, useState } from "react";
-import {
-  collection,
-  getDoc,
-  getDocs,
-  setDoc,
-  doc,
-  addDoc,
-} from "firebase/firestore";
+import { useState, FormEvent } from "react";
+
+// MUI imports
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
+  UserCredential,
 } from "firebase/auth";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Home from "../components/pages/Home";
-import Flashcards from "../components/pages/Flashcards";
-import useFirebaseConfig from "../components/Firebase/useFirebaseConfig";
-import Inbox from "../components/pages/Inbox";
 
-export default function Signup({ setIsSignUp }) {
-  const { db } = useFirebaseConfig();
-  const [users, setUsers] = useState<{ id: string }[]>([]);
-  const usersCollectionRef = collection(db, "users");
-  const [uid, setUid] = useState<string>("");
-  useEffect(() => {
-    const getUsers = async () => {
-      const data = await getDocs(usersCollectionRef);
-      setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-
-      users.map((user) => {
-        console.log(user);
-      });
-    };
-
-    getUsers();
-  }, []);
-  ////
-  const auth = getAuth();
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const [isSignUp, setIsSignUp] = useState(false); //login 0
-
-  const handleInputs = (event: ChangeEvent<HTMLInputElement>) => {
-    const inputs = { [event.target.name]: event.target.value };
-    setData({ ...data, ...inputs });
-  };
-  ////
-  const addData = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-
-      // Get the user ID
-      const uid = userCredential.user.uid;
-      setUid(uid);
-      console.log(`uid: ${uid}`);
-
-      // Retrieve the existing user document data
-      const userRef = doc(db, "users", uid);
-      const userDoc = await getDoc(userRef);
-      console.log(`userDoc: ${userDoc.data()}`);
-
-      if (userDoc.exists()) {
-        console.log("successful login");
-
-        // Update the document in the "users" collection
-        await setDoc(userRef, { position: "student" }); // Update position to "student"
-      } else {
-        console.log("successful login, creating new entry in db");
-
-        // Create a new document in the "users" collection with default values
-        const newData = {
-          position: "student",
-        };
-
-        await setDoc(userRef, newData);
-      }
-
-      // Create a new task document in the "users/userId/tasks" collection
-      const tasksCollectionRef = collection(db, `users/${uid}/tasks`);
-      const taskData = null;
-
-      const taskRef = await addDoc(tasksCollectionRef, taskData);
-      console.log("New task document ID:", taskRef.id);
-
-      setIsSignUp(true);
-      console.log("Welcome to the Home page");
-    } catch (error) {
-      console.log("Login error:", error);
-    }
-  };
-
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        setIsSignUp(false);
-        setUid(""); // Reset the uid state variable
-      })
-      .catch((error) => {
-        console.log("Logout error:", error);
-      });
-  };
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        setUid(uid);
-        setIsSignUp(true);
-      } else {
-        setIsSignUp(false);
-      }
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [auth]);
-  return (
-    <div className="App-header">
-      {isSignUp ? (
-        <>
-          <Router>
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Home userId={uid}></Home>} />
-              <Route path="/flashcards" element={<Flashcards />} />
-              <Route path="/inbox" element={<Inbox userId={uid} />} />
-            </Routes>
-          </Router>
-          <button onClick={handleLogout}>Log out</button>
-        </>
-      ) : (
-        <>
-          <input
-            placeholder="Email"
-            name="email"
-            type="email"
-            className="input-fields"
-            onChange={(event) => handleInputs(event)}
-          />
-          <input
-            placeholder="Password"
-            name="password"
-            type="password"
-            className="input-fields"
-            onChange={(event) => handleInputs(event)}
-          />
-
-          <button onClick={addData}>Create User</button>
-          <></>
-        </>
-      )}
-    </div>
-  );
+interface SignUpProps {
+  setIsSignUp: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../components/Firebase/useFirebaseConfig";
+const SignUp: React.FC<SignUpProps> = ({ setIsSignUp }) => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const auth = getAuth();
 
-const Signup = () => {
-  const navigate = useNavigate();
+  const [accExists, setAccExists] = useState<boolean>(false);
+  const [shortPw, setShortPw] = useState<boolean>(false);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const onSubmit = async (e: { preventDefault: () => void }) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
+    console.log(email, password);
     await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then((userCredential: UserCredential) => {
         // Signed in
         const user = userCredential.user;
         console.log(user);
-        navigate("/login");
         // ...
       })
-      .catch((error) => {
+      .catch((error: any) => {
+        if (error.code === "auth/email-already-in-use") {
+          setAccExists(true);
+
+          setTimeout(() => {
+            setIsSignUp(false);
+          }, 2000);
+        } else if (
+          error.code === "auth/missing-password" ||
+          error.code === "auth/weak-password"
+        ) {
+          setShortPw(true);
+
+          setTimeout(() => {
+            setShortPw(false);
+          }, 2000);
+        }
         const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+        console.log(errorCode);
         // ..
       });
   };
 
-//   return (
-//     <main>
-//       <section>
-//         <div>
-//           <div>
-//             <h1> FocusApp </h1>
-//             <form>
-//               <div>
-//                 <label htmlFor="email-address">Email address</label>
-//                 <input
-//                   type="email"
-//                   value={email}
-//                   onChange={(e) => setEmail(e.target.value)}
-//                   required
-//                   placeholder="Email address"
-//                 />
-//               </div>
+  // format taken from https://github.com/mui/material-ui/blob/v5.13.2/docs/data/material/getting-started/templates/sign-in/SignIn.js
+  return (
+    <>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "#29a2ed" }}></Avatar>
+          <Typography component="h1" variant="h5">
+            Sign Up
+          </Typography>
+          <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{
+                mt: 3,
+                mb: 2,
+                fontWeight: 700,
+              }}
+            >
+              Sign Up
+            </Button>
+          </Box>
+          {accExists && (
+            <Backdrop
+              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={accExists}
+            >
+              <Box
+                sx={{
+                  marginTop: 10,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <CircularProgress color="inherit" sx={{ m: 1 }} />
+                <Box sx={{ mt: 1 }}>
+                  <Typography component="h1" variant="h5">
+                    email already in use, redirecting to login page
+                  </Typography>
+                </Box>
+              </Box>
+            </Backdrop>
+          )}
+          {shortPw && (
+            <Backdrop
+              sx={{ color: "#FFF", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={shortPw}
+            >
+              <Box
+                sx={{
+                  marginTop: 10,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  sx={{
+                    mt: 1,
+                    backgroundColor: "#c41e16",
+                    borderRadius: 2,
+                    padding: 1,
+                  }}
+                >
+                  <Typography component="h1" variant="h5">
+                    password must be at least 6 characters long
+                  </Typography>
+                </Box>
+                <Box sx={{ mt: 1 }}></Box>
+              </Box>
+            </Backdrop>
+          )}
+        </Box>
+      </Container>
+    </>
+  );
+};
 
-//               <div>
-//                 <label htmlFor="password">Password</label>
-//                 <input
-//                   type="password"
-//                   value={password}
-//                   onChange={(e) => setPassword(e.target.value)}
-//                   required
-//                   placeholder="Password"
-//                 />
-//               </div>
+export default SignUp;
 
-//               <button type="submit" onClick={onSubmit}>
-//                 Sign up
-//               </button>
-//             </form>
+{
+  /* <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 10,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: '#29a2ed'}}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign Up
+            </Typography>
+            <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ 
+                mt: 3, 
+                mb: 2,
+                fontWeight: 700
+              }}
+            >
+              Sign In
+            </Button>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider> */
+}
 
-//             <p>
-//               Already have an account? <NavLink to="/login">Sign in</NavLink>
-//             </p>
-//           </div>
-//         </div>
-//       </section>
-//     </main>
-//   );
-// };
-
-// export default Signup;
+{
+  /* <h2>Sign Up</h2>
+      <form onSubmit={handleSignUp}>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+        <button type="submit">Sign Up</button>
+      </form> */
+}
