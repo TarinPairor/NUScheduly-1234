@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 
-function Navbar() {
+function Navbar({ user }) {
   const [click, setClick] = useState(false);
 
   const handleClick = () => setClick(!click);
@@ -48,6 +48,11 @@ function Navbar() {
               <Link to="/inbox" className="nav-links" onClick={closeMobileMenu}>
                 Inbox
               </Link>
+            </li>
+
+            {/* Example usage: Display user's name */}
+            <li className="nav-item">
+              <span className="nav-links">Welcome, {user.displayName}</span>
             </li>
           </ul>
         </div>

@@ -19,12 +19,12 @@ import Home from "./components/pages/Home";
 import Flashcards from "./components/pages/Flashcards";
 import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
 import Inbox from "./components/pages/Inbox";
+
 function App() {
   const { db } = useFirebaseConfig();
   const [users, setUsers] = useState<{ id: string }[]>([]);
   const usersCollectionRef = collection(db, "users");
   const [uid, setUid] = useState<string>("");
-
   useEffect(() => {
     const getUsers = async () => {
       const data = await getDocs(usersCollectionRef);
@@ -43,7 +43,7 @@ function App() {
     email: "",
     password: "",
   });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); //login 0 
 
   const handleInputs = (event: ChangeEvent<HTMLInputElement>) => {
     const inputs = { [event.target.name]: event.target.value };
