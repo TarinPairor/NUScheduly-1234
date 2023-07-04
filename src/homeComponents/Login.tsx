@@ -166,11 +166,10 @@
 
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { getAuth } from "firebase/auth";
+import { auth } from "../components/Firebase/useFirebaseConfig";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const auth = getAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

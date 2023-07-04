@@ -179,7 +179,6 @@ function App() {
       <div>
         <section>
           <Routes>
-            {" "}
             <Route path="/" element={<Home userId={""} />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />

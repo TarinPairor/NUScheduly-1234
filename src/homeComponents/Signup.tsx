@@ -168,12 +168,11 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { getAuth } from "firebase/auth";
+import { auth } from "../components/Firebase/useFirebaseConfig";
 import useFirebaseConfig from "../components/Firebase/useFirebaseConfig";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const auth = getAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
