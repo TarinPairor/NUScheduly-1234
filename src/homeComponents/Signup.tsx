@@ -44,6 +44,8 @@ export default function Signup({ setIsSignUp }) {
     password: "",
   });
 
+  const [isSignUp, setIsSignUp] = useState(false); //login 0
+
   const handleInputs = (event: ChangeEvent<HTMLInputElement>) => {
     const inputs = { [event.target.name]: event.target.value };
     setData({ ...data, ...inputs });
@@ -91,7 +93,7 @@ export default function Signup({ setIsSignUp }) {
       const taskRef = await addDoc(tasksCollectionRef, taskData);
       console.log("New task document ID:", taskRef.id);
 
-      setIsLoggedIn(true);
+      setIsSignUp(true);
       console.log("Welcome to the Home page");
     } catch (error) {
       console.log("Login error:", error);
@@ -101,7 +103,7 @@ export default function Signup({ setIsSignUp }) {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        setIsLoggedIn(false);
+        setIsSignUp(false);
         setUid(""); // Reset the uid state variable
       })
       .catch((error) => {
@@ -114,9 +116,9 @@ export default function Signup({ setIsSignUp }) {
       if (user) {
         const uid = user.uid;
         setUid(uid);
-        setIsLoggedIn(true);
+        setIsSignUp(true);
       } else {
-        setIsLoggedIn(false);
+        setIsSignUp(false);
       }
     });
 
@@ -126,7 +128,7 @@ export default function Signup({ setIsSignUp }) {
   }, [auth]);
   return (
     <div className="App-header">
-      {isLoggedIn ? (
+      {isSignUp ? (
         <>
           <Router>
             <Navbar />
@@ -155,7 +157,7 @@ export default function Signup({ setIsSignUp }) {
             onChange={(event) => handleInputs(event)}
           />
 
-          <button onClick={addData}>Log In</button>
+          <button onClick={addData}>Create User</button>
           <></>
         </>
       )}
