@@ -2,7 +2,6 @@ import { useState, useEffect, ChangeEvent } from "react";
 import { GiRapidshareArrow } from "react-icons/gi";
 import correct from "./correct.png";
 import incorrect from "./incorrect.png";
-import "./Card.css";
 
 interface QuizCardProps {
   setQuestionNumber: (questionNumber: number) => void;

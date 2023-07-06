@@ -2,7 +2,6 @@ import { useState } from "react";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { GrEdit } from "react-icons/gr";
 import EditCard from "./EditCard";
-import "./Card.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface CardProps {
