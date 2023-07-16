@@ -3,6 +3,7 @@ import { HiPlusCircle, HiStop } from "react-icons/hi";
 import Deck from "../../FlashcardComponents/Deck";
 import IconBar from "./IconBar";
 import Card from "../../FlashcardComponents/Card";
+import "./SideBar.css";
 
 interface SideBarProps {
   userDecks: any;

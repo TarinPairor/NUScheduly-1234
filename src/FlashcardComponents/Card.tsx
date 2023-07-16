@@ -3,6 +3,7 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { GrEdit } from "react-icons/gr";
 import EditCard from "./EditCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "./Card.css";
 
 interface CardProps {
   currentCard: {

@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from "react";
 import { MdSwapVert } from "react-icons/md";
+import "./Card.css";
 
 interface EditCardProps {
   currentCard: {

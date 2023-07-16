@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from "react";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BsBoxArrowInRight } from "react-icons/bs";
+import "./Deck.css";
 
 interface DeckProps {
   deck: {

@@ -3,6 +3,7 @@ import QuizCard from "./QuizCard";
 import { BsCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
 import { FaRegSmileBeam, FaRegFrown } from "react-icons/fa";
 import Footer from "../components/FlashcardContainer/Footer";
+import "./FlashcardMainPage.css";
 
 interface FlashcardMainPageProps {
   quizMode: boolean;
