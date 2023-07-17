@@ -1,4 +1,8 @@
-.Flashcards {
-  margin-top: 50px;
-  margin-bottom: 20px;
+.cardRow {
+  margin-top: 10%;
+  padding: 5px;
+}
+
+.btnRow {
+  padding: 5px;
 }

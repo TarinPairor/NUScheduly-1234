@@ -46,6 +46,9 @@ function Inbox({ userId }: InboxProps) {
   }, [tasksRef, userId, tasks]);
 
   function extractDate(str: string): string {
+    if (!str || typeof str !== "string") {
+      return "";
+    }
     // Extract the date part from the string
     const date = str.substring(2, 10);
 

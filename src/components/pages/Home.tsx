@@ -93,7 +93,12 @@ function Home({ userId }: HomeProps) {
   };
 
   function extractDate(str: string): string {
+    if (!str || typeof str !== "string") {
+      return "";
+    }
+    // Extract the date part from the string
     const date = str.substring(2, 10);
+
     return date;
   }
 

@@ -148,7 +148,10 @@ function App() {
             <div className="content-wrapper">
               <Routes>
                 <Route path="/" element={<Home userId={uid} />} />
-                <Route path="/flashcards" element={<Flashcards />} />
+                <Route
+                  path="/flashcards"
+                  element={<Flashcards userId={uid} />}
+                />
                 <Route path="/inbox" element={<Inbox userId={uid} />} />
               </Routes>
             </div>
