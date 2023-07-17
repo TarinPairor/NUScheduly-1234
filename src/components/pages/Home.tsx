@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 //import useFirebaseConfig from "../Firebase/useFirebaseConfig";
 import DatePickerValue from "../DatePickerValue";
+import "./Home.css";
 import {
   getFirestore,
   collection,
@@ -92,7 +93,12 @@ function Home({ userId }: HomeProps) {
   };
 
   function extractDate(str: string): string {
+    if (!str || typeof str !== "string") {
+      return "";
+    }
+    // Extract the date part from the string
     const date = str.substring(2, 10);
+
     return date;
   }
 
@@ -103,6 +109,7 @@ function Home({ userId }: HomeProps) {
       <br></br>
       <div className="row">
         <div className="col">
+          <>Add task here</>
           <input
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
