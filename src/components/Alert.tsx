@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
-import { styled } from "@mui/system";
+//import { styled } from "@mui/system";
 
 interface Props {
   children: ReactNode;
@@ -9,7 +9,7 @@ interface Props {
   severity?: "error" | "warning" | "info" | "success"; // Made the severity prop optional
 }
 
-const AnimatedAlert = styled(Alert)`
+/*const AnimatedAlert = styled(Alert)`
   animation: fadeOut 5s ease-in-out forwards;
 
   @keyframes fadeOut {
@@ -20,7 +20,7 @@ const AnimatedAlert = styled(Alert)`
       opacity: 0;
     }
   }
-`;
+`;*/
 
 export default function BasicAlerts({
   children,
@@ -35,9 +35,9 @@ export default function BasicAlerts({
 
   return (
     <Stack sx={{ width: "100%" }} spacing={2}>
-      <AnimatedAlert variant="outlined" severity={severity} onClose={onClose}>
+      <Alert variant="outlined" severity={severity} onClose={onClose}>
         {children}
-      </AnimatedAlert>
+      </Alert>
     </Stack>
   );
 }

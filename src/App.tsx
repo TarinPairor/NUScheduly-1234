@@ -21,6 +21,8 @@ import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
 import Inbox from "./components/pages/Inbox";
 import Members from "./components/pages/Members";
 import "./App.css";
+import FlashcardList from "./components/pages/FlashcardList";
+import Collaborate from "./components/pages/Collab";
 
 function App() {
   const { db } = useFirebaseConfig();
@@ -153,8 +155,13 @@ function App() {
                   path="/flashcards"
                   element={<Flashcards userId={uid} />}
                 />
+                <Route
+                  path="/flashcardlist"
+                  element={<FlashcardList userId={uid} />}
+                />
                 <Route path="/inbox" element={<Inbox userId={uid} />} />
                 <Route path="/members" element={<Members />} />
+                <Route path="/collab" element={<Collaborate userId={uid} />} />
               </Routes>
             </div>
           </Router>

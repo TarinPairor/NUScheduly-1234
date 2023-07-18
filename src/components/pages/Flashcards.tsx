@@ -68,7 +68,7 @@ function Flashcards({ userId }: FlashcardsProps) {
     }
 
     setCurrentCard(getRandomCard(cards));
-    console.log("updated");
+    console.log(cards.length);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,6 +79,12 @@ function Flashcards({ userId }: FlashcardsProps) {
   };
 
   const addCard = async () => {
+    if (!newCard.eng || !newCard.han || !newCard.pin) {
+      setShowAlert(true);
+      setAlertMessage("Please fill in all fields.");
+      return;
+    }
+
     try {
       const docRef = await addDoc(flashcardsRef, newCard);
       console.log("Flashcard added with ID:", docRef.id);
@@ -95,6 +101,11 @@ function Flashcards({ userId }: FlashcardsProps) {
 
   return (
     <div className="Flashcards">
+      {showAlert && (
+        <Alert onClose={closeAlert} severity="info">
+          {alertMessage}
+        </Alert>
+      )}
       <div className="cardRow">
         {currentCard &&
         currentCard.eng &&
@@ -136,11 +147,6 @@ function Flashcards({ userId }: FlashcardsProps) {
           <button onClick={addCard}>Add Card</button>
         </div>
       </div>
-      {showAlert && (
-        <Alert onClose={closeAlert} severity="info">
-          {alertMessage}
-        </Alert>
-      )}
     </div>
   );
 }
