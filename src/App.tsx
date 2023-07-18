@@ -19,6 +19,7 @@ import Home from "./components/pages/Home";
 import Flashcards from "./components/pages/Flashcards";
 import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
 import Inbox from "./components/pages/Inbox";
+import Members from "./components/pages/Members";
 import "./App.css";
 
 function App() {
@@ -93,7 +94,7 @@ function App() {
 
         // Create a new document in the "users" collection with default values
         const newData = {
-          position: "student",
+          email: data.email,
         };
 
         await setDoc(userRef, newData);
@@ -153,6 +154,7 @@ function App() {
                   element={<Flashcards userId={uid} />}
                 />
                 <Route path="/inbox" element={<Inbox userId={uid} />} />
+                <Route path="/members" element={<Members />} />
               </Routes>
             </div>
           </Router>

@@ -49,10 +49,17 @@ function Inbox({ userId }: InboxProps) {
     if (!str || typeof str !== "string") {
       return "";
     }
-    // Extract the date part from the string
-    const date = str.substring(2, 10);
 
-    return date;
+    const dateObj = new Date(str);
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    const formattedDate = dateObj.toLocaleString("en-US", options);
+
+    return formattedDate;
   }
 
   useEffect(() => {

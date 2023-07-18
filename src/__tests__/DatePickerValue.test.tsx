@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import { test } from "@jest/globals";
 import "@testing-library/jest-dom/extend-expect";
-import DatePickerValue from "../components/DatePickerValue";
+import DatePickerValue from "../components/DateTimePickerValue";
 
 test("renders DatePickerValue without errors", () => {
   render(<DatePickerValue />);

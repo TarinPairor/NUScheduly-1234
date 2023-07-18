@@ -1,5 +1,3 @@
-/* Home.css */
-
 .container {
   max-width: 600px;
   margin: 0 auto;
@@ -20,8 +18,16 @@ h2 {
 .col {
   flex: 1;
   margin-right: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: large;
 }
-
+.description {
+  font-weight: bold;
+}
+.datePickerContainer {
+  flex: 5; /* Adjust the flex value to control the relative size */
+}
 .col-auto {
   flex: 0;
 }
@@ -47,6 +53,9 @@ h2 {
 
 .taskText {
   font-size: 18px;
+}
+.taskDesc {
+  font-weight: 100;
 }
 
 .iconsWrap {

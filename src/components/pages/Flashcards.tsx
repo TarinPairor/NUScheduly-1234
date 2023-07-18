@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Card from "../Card";
 import DrawButton from "../DrawButton";
+import Alert from "../Alert";
 import "firebase/database";
 import {
   getFirestore,
@@ -21,6 +22,8 @@ function Flashcards({ userId }: FlashcardsProps) {
     han: "",
     pin: "",
   });
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   const db = getFirestore();
   const flashcardsRef = collection(db, `users/${userId}/flashcards`);
@@ -53,6 +56,17 @@ function Flashcards({ userId }: FlashcardsProps) {
   };
 
   const updateCard = () => {
+    if (cards.length === 0) {
+      setAlertMessage("Card list is empty!");
+      setShowAlert(true);
+      return;
+    }
+    if (cards.length === 1) {
+      setAlertMessage("Add some more!");
+      setShowAlert(true);
+      return;
+    }
+
     setCurrentCard(getRandomCard(cards));
     console.log("updated");
   };
@@ -72,6 +86,11 @@ function Flashcards({ userId }: FlashcardsProps) {
     } catch (error) {
       console.error("Error adding flashcard:", error);
     }
+  };
+
+  const closeAlert = () => {
+    setShowAlert(false);
+    setAlertMessage("");
   };
 
   return (
@@ -98,25 +117,30 @@ function Flashcards({ userId }: FlashcardsProps) {
             name="eng"
             value={newCard.eng}
             onChange={handleInputChange}
-            placeholder="Eng"
+            placeholder="Front"
           />
           <input
             type="text"
             name="han"
             value={newCard.han}
             onChange={handleInputChange}
-            placeholder="Han"
+            placeholder="Back"
           />
           <input
             type="text"
             name="pin"
             value={newCard.pin}
             onChange={handleInputChange}
-            placeholder="Pin"
+            placeholder="Description"
           />
           <button onClick={addCard}>Add Card</button>
         </div>
       </div>
+      {showAlert && (
+        <Alert onClose={closeAlert} severity="info">
+          {alertMessage}
+        </Alert>
+      )}
     </div>
   );
 }

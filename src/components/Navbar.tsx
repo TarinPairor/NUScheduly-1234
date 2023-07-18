@@ -43,13 +43,20 @@ function Navbar() {
                 Collaborate
               </Link>
             </li>
-
             <li className="nav-item">
               <Link to="/inbox" className="nav-links" onClick={closeMobileMenu}>
                 Inbox
               </Link>
             </li>
-
+            <li className="nav-item">
+              <Link
+                to="/members"
+                className="nav-links"
+                onClick={closeMobileMenu}
+              >
+                Members
+              </Link>
+            </li>
             {/* Example usage: Display user's name */}
             <li className="nav-item">
               {/*<span className="nav-links">Welcome, {user.displayName}</span>*/}
