@@ -16,6 +16,7 @@ import {
 import Task from "../Interfaces/Task";
 import dayjs from "dayjs";
 import "dayjs/locale/en";
+import TextField from "@mui/material/TextField";
 
 interface HomeProps {
   userId: string;
@@ -145,11 +146,6 @@ function Home({ userId }: HomeProps) {
 
   return (
     <div>
-      <div className="alert-message">
-        {alertMessage && (
-          <Alert onClose={handleCloseAlert}>{alertMessage}</Alert>
-        )}
-      </div>
       <div className="container App">
         <br />
         <h2>ToDolist</h2>
@@ -159,8 +155,9 @@ function Home({ userId }: HomeProps) {
           <div className="row">
             <div className="col">
               <label htmlFor="taskTitleInput">Task Title</label>
-              <input
+              <TextField
                 id="taskTitleInput"
+                label="New Title"
                 value={updateData.title}
                 onChange={(e) =>
                   setUpdateData({
@@ -172,8 +169,9 @@ function Home({ userId }: HomeProps) {
               />
               <br />
               <label htmlFor="descriptionInput">Description</label>
-              <input
+              <TextField
                 id="descriptionInput"
+                label="New Description"
                 value={updateData.description}
                 onChange={(e) =>
                   setUpdateData({
@@ -201,9 +199,9 @@ function Home({ userId }: HomeProps) {
           <div className="row">
             <div className="col">
               <label htmlFor="taskInput">Task</label>
-              <input
+              <TextField
                 id="taskInput"
-                placeholder="Task title"
+                label="Task title"
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
                 className="form-control form-control-lg"
@@ -211,9 +209,10 @@ function Home({ userId }: HomeProps) {
               <br />
               <div className="description"></div>
               <label htmlFor="descriptionInput">Description</label>
-              <input
+              <TextField
                 id="descriptionInput"
-                placeholder="Task description"
+                label="Task description"
+                multiline
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
                 className="form-control form-control-lg"
@@ -234,7 +233,11 @@ function Home({ userId }: HomeProps) {
             </div>
           </div>
         )}
-
+        <div className="alert-message">
+          {alertMessage && (
+            <Alert onClose={handleCloseAlert}>{alertMessage}</Alert>
+          )}
+        </div>
         {toDo &&
           toDo
             .slice(0, 4)

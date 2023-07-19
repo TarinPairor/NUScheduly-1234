@@ -47,8 +47,6 @@ function FlashcardList({ userId }: FlashcardListProps) {
           <div className="card">
             <div className="front">
               <div className="eng">{card.eng}</div>
-              <div className="han">{card.han}</div>
-              <div className="pin">{card.pin}</div>
             </div>
             <div className="back"></div>
           </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   collection,
   addDoc,
@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import useFirebaseConfig from "../Firebase/useFirebaseConfig";
 import Message from "../Message";
+import Alert from "../Alert";
 
 interface MessageData {
   id: string;
@@ -27,16 +28,17 @@ function Collaborate({ userId }: CollaborateProps) {
   const { db } = useFirebaseConfig();
   const messagesRef = collection(db, "messages");
 
-  const [messages, setMessages] = React.useState<MessageData[]>([]);
-  const [newMessage, setNewMessage] = React.useState<MessageData>({
+  const [messages, setMessages] = useState<MessageData[]>([]);
+  const [newMessage, setNewMessage] = useState<MessageData>({
     id: "", // Use empty string as a temporary key for new messages
     title: "",
     text: "",
     date: new Date(),
     user: userId,
   });
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchMessages = async () => {
       const q = query(messagesRef, orderBy("date", "desc"));
       const querySnapshot = await getDocs(q);
@@ -67,6 +69,11 @@ function Collaborate({ userId }: CollaborateProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!newMessage.title || !newMessage.text) {
+      setErrorMessage("Title and text cannot be empty.");
+      return;
+    }
+
     try {
       const docRef = await addDoc(messagesRef, newMessage);
       console.log("Message added with ID:", docRef.id);
@@ -77,6 +84,7 @@ function Collaborate({ userId }: CollaborateProps) {
         date: new Date(),
         user: userId,
       });
+      setErrorMessage(null);
     } catch (error) {
       console.error("Error adding message:", error);
     }
@@ -116,6 +124,7 @@ function Collaborate({ userId }: CollaborateProps) {
             onChange={handleInputChange}
           ></textarea>
         </div>
+        {errorMessage && <p>{errorMessage}</p>}
         <button type="submit">Add Message</button>
       </form>
 

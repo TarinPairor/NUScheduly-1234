@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import Card from "../Card";
 import DrawButton from "../DrawButton";
@@ -10,6 +11,7 @@ import {
   addDoc,
 } from "firebase/firestore";
 
+import TextField from "@mui/material/TextField";
 interface FlashcardsProps {
   userId: string;
 }
@@ -121,28 +123,28 @@ function Flashcards({ userId }: FlashcardsProps) {
         )}
       </div>
       <div className="buttonRow">
-        <DrawButton drawCard={updateCard} />
+        <div className="drawCard">
+          <DrawButton drawCard={updateCard} />
+        </div>
+        <br></br>
         <div className="addCardForm">
-          <input
-            type="text"
-            name="eng"
+          <TextField
+            id="eng"
+            label="Front"
             value={newCard.eng}
             onChange={handleInputChange}
-            placeholder="Front"
           />
-          <input
-            type="text"
-            name="han"
+          <TextField
+            id="han"
+            label="Back"
             value={newCard.han}
             onChange={handleInputChange}
-            placeholder="Back"
           />
-          <input
-            type="text"
-            name="pin"
+          <TextField
+            id="pin"
+            label="Description"
             value={newCard.pin}
             onChange={handleInputChange}
-            placeholder="Description"
           />
           <button onClick={addCard}>Add Card</button>
         </div>

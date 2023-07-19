@@ -1,5 +1,5 @@
 import React from "react";
-
+import Box from "@mui/material/Box";
 interface MessageProps {
   message: {
     id: string;
@@ -22,16 +22,17 @@ function formatDate(date: Date): string {
 const Message: React.FC<MessageProps> = ({ message }) => {
   const { title, text, date } = message;
   const formattedDate = formatDate(date);
-
   return (
     <div className="message">
-      <h3>{title}</h3>
-      <p>{text}</p>
-      <div className="message-details">
-        <p className="message-date">
-          <strong>Date:</strong> {formattedDate}
-        </p>
-      </div>
+      <Box>
+        <h3>{title}</h3>
+        <p>{text}</p>
+        <div className="message-details">
+          <p className="message-date">
+            <strong>Date:</strong> {formattedDate}
+          </p>
+        </div>
+      </Box>
     </div>
   );
 };

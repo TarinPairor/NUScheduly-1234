@@ -6,3 +6,7 @@
 .btnRow {
   padding: 5px;
 }
+.buttonRow .drawCard {
+  margin-top: 400px;
+  height: 400;
+}
