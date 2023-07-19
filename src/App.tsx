@@ -194,7 +194,7 @@ import Collaborate from "./components/pages/Collab";
 //   );
 // }
 
-// export default App; 
+// export default App;
 
 import { useState, useEffect, useRef } from "react";
 import { signOut } from "firebase/auth";
@@ -248,7 +248,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="App-header">
       {!isLoggedIn &&
         (isSignUp ? (
           <SignUp setIsSignUp={setIsSignUp} />
@@ -284,30 +284,33 @@ function App() {
       )}
       <div>
         {isLoggedIn && (
-           <>
-           <Router>
-             <Navbar />
-             <div className="content-wrapper">
-               <Routes>
-                 <Route path="/" element={<Home userId={uid} />} />
-                 <Route
-                   path="/flashcards"
-                   element={<Flashcards userId={uid} />}
-                 />
-                 <Route
-                   path="/flashcardlist"
-                   element={<FlashcardList userId={uid} />}
-                 />
-                 <Route path="/inbox" element={<Inbox userId={uid} />} />
-                 <Route path="/members" element={<Members />} />
-                 <Route path="/collab" element={<Collaborate userId={uid} />} />
-               </Routes>
-             </div>
-           </Router>
-           <div className="logout-wrapper">
-             <button onClick={handleLogout}>Log out</button>
-           </div>
-         </>
+          <>
+            <Router>
+              <Navbar />
+              <div className="content-wrapper">
+                <Routes>
+                  <Route path="/" element={<Home userId={uid} />} />
+                  <Route
+                    path="/flashcards"
+                    element={<Flashcards userId={uid} />}
+                  />
+                  <Route
+                    path="/flashcardlist"
+                    element={<FlashcardList userId={uid} />}
+                  />
+                  <Route path="/inbox" element={<Inbox userId={uid} />} />
+                  <Route path="/members" element={<Members />} />
+                  <Route
+                    path="/collab"
+                    element={<Collaborate userId={uid} />}
+                  />
+                </Routes>
+              </div>
+            </Router>
+            <div className="logout-wrapper">
+              <button onClick={handleLogout}>Log out</button>
+            </div>
+          </>
           // <>
           //   <Router>
           //     <Navbar />
