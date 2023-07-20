@@ -12,8 +12,6 @@ import {
 } from "firebase/firestore";
 
 import TextField from "@mui/material/TextField";
-import IRecallButton from "../IRecallButton";
-import IDontRecallButton from "../IDontRecallButton";
 interface FlashcardsProps {
   userId: string;
 }
@@ -28,8 +26,6 @@ function Flashcards({ userId }: FlashcardsProps) {
   });
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const [, setRecalledCards] = useState<any[]>([]);
-  const [, setNotRecalledCards] = useState<any[]>([]);
 
   const db = getFirestore();
   const flashcardsRef = collection(db, `users/${userId}/flashcards`);
@@ -61,7 +57,7 @@ function Flashcards({ userId }: FlashcardsProps) {
     return filteredCards[randomIndex];
   };
 
-  const updateCard = (isRecalled: boolean) => {
+  const updateCard = () => {
     if (cards.length === 0) {
       setAlertMessage("Card list is empty!");
       setShowAlert(true);
@@ -73,18 +69,8 @@ function Flashcards({ userId }: FlashcardsProps) {
       return;
     }
 
-    if (isRecalled) {
-      // Move the current card to recalledCards
-      setRecalledCards((prevRecalled) => [...prevRecalled, currentCard]);
-    } else {
-      // Move the current card to notRecalledCards
-      setNotRecalledCards((prevNotRecalled) => [
-        ...prevNotRecalled,
-        currentCard,
-      ]);
-    }
-
     setCurrentCard(getRandomCard(cards));
+    console.log(cards.length);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,37 +124,29 @@ function Flashcards({ userId }: FlashcardsProps) {
       </div>
       <div className="buttonRow">
         <div className="drawCard">
-          <DrawButton drawCard={() => updateCard(false)} />
+          <DrawButton drawCard={updateCard} />
         </div>
-        <div className="recallCard">
-          <IRecallButton recallCard={() => updateCard(true)} />
-        </div>
-        <div className="dontRecallCard">
-          <IDontRecallButton dontRecallCard={() => updateCard(false)} />
-        </div>
-        <br />
+        <br></br>
         <div className="addCardForm">
-          <div className="addCardForm">
-            <TextField
-              id="eng"
-              label="Front"
-              value={newCard.eng}
-              onChange={handleInputChange}
-            />
-            <TextField
-              id="han"
-              label="Back"
-              value={newCard.han}
-              onChange={handleInputChange}
-            />
-            <TextField
-              id="pin"
-              label="Description"
-              value={newCard.pin}
-              onChange={handleInputChange}
-            />
-            <button onClick={addCard}>Add Card</button>
-          </div>
+          <TextField
+            id="eng"
+            label="Front"
+            value={newCard.eng}
+            onChange={handleInputChange}
+          />
+          <TextField
+            id="han"
+            label="Back"
+            value={newCard.han}
+            onChange={handleInputChange}
+          />
+          <TextField
+            id="pin"
+            label="Description"
+            value={newCard.pin}
+            onChange={handleInputChange}
+          />
+          <button onClick={addCard}>Add Card</button>
         </div>
       </div>
     </div>
