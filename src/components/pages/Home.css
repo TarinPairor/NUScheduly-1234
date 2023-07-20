@@ -53,6 +53,7 @@ h2 {
 
 .taskText {
   font-size: 18px;
+  color: black;
 }
 .taskDesc {
   font-weight: 100;
