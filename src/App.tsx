@@ -211,6 +211,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import SignUp from "./components/pages/Signup";
+import "./App.css";
 
 function App() {
   const isMountedRef = useRef(true);

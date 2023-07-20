@@ -79,6 +79,7 @@ const SignUp: React.FC<SignUpProps> = ({ setIsSignUp }) => {
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
+          <h6>Recommend Using NUS Email</h6>
           <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
