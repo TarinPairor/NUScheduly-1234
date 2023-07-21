@@ -212,6 +212,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import SignUp from "./components/pages/Signup";
 import "./App.css";
+import Calendar from "./components/pages/Calendar";
 
 function App() {
   const isMountedRef = useRef(true);
@@ -305,24 +306,11 @@ function App() {
                     path="/collab"
                     element={<Collaborate userId={uid} />}
                   />
+                  <Route path="/calendar" element={<Calendar userId={uid} />} />
                 </Routes>
               </div>
             </Router>
-            <div className="logout-wrapper">
-              <button onClick={handleLogout}>Log out</button>
-            </div>
           </>
-          // <>
-          //   <Router>
-          //     <Navbar />
-          //     <Routes>
-          //       <Route path="/" element={<Home uid={uid}></Home>} />
-          //       <Route path="/flashcards" element={<Flashcards />} />
-          //       <Route path="/inbox" element={<Inbox userId={uid} />} />
-          //     </Routes>
-          //   </Router>
-          //   <button onClick={handleLogout}>Log out</button>
-          // </>
         )}
       </div>
     </div>
