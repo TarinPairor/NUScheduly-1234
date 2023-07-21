@@ -13,6 +13,7 @@ import FlashcardList from "./components/pages/FlashcardList";
 import Collaborate from "./components/pages/Collab";
 import Login from "./components/pages/Login";
 import HandleLogout from "./components/HandleLogout";
+import Calendar from "./components/pages/Calendar";
 import "./App.css";
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
                 <Route path="/inbox" element={<Inbox userId={uid} />} />
                 <Route path="/members" element={<Members />} />
                 <Route path="/collab" element={<Collaborate userId={uid} />} />
+                <Route path="/calendar" element={<Calendar userId={uid} />} />
               </Routes>
             </div>
           </Router>

@@ -57,6 +57,15 @@ function Navbar() {
                 Inbox
               </Link>
             </li>
+            <li className="nav-item">
+              <Link
+                to="/calendar"
+                className="nav-links"
+                onClick={closeMobileMenu}
+              >
+                Calendar
+              </Link>
+            </li>
             <li className="nav-item"></li>
             {/* Example usage: Display user's name */}
             <li className="nav-item">
