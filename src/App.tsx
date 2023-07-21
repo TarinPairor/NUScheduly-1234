@@ -7,12 +7,12 @@ import Home from "./components/pages/Home";
 import Flashcards from "./components/pages/Flashcards";
 import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
 import Inbox from "./components/pages/Inbox";
-import Members from "./components/pages/Members";
 import "./App.css";
 import FlashcardList from "./components/pages/FlashcardList";
 import Collaborate from "./components/pages/Collab";
 import Login from "./components/pages/Login";
 import HandleLogout from "./components/HandleLogout";
+import Calendar from "./components/pages/Calendar";
 import "./App.css";
 
 function App() {
@@ -60,8 +60,8 @@ function App() {
                   element={<FlashcardList userId={uid} />}
                 />
                 <Route path="/inbox" element={<Inbox userId={uid} />} />
-                <Route path="/members" element={<Members />} />
                 <Route path="/collab" element={<Collaborate userId={uid} />} />
+                <Route path="/calendar" element={<Calendar userId={uid} />} />
               </Routes>
             </div>
           </Router>
