@@ -8,7 +8,7 @@ body {
   flex-direction: column;
 }
 
-.App-header {
+.app {
   background: linear-gradient(229deg, #ffab02 0%, #d8dfef 100%);
 }
 
