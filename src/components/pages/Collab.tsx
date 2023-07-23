@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import useFirebaseConfig from "../Firebase/useFirebaseConfig";
 import Message from "../Message";
-import Alert from "../Alert";
+// import Alert from "../Alert";
 
 interface MessageData {
   id: string;
