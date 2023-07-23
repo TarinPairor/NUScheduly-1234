@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import useFirebaseConfig from "../Firebase/useFirebaseConfig";
 import Message from "../Message";
+import "./Collab.css";
 // import Alert from "../Alert";
 
 // Interface to represent the structure of a message
