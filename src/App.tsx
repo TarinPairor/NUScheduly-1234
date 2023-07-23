@@ -196,15 +196,15 @@ import Collaborate from "./components/pages/Collab";
 
 // export default App;
 
+// import { signOut } from "firebase/auth";
 import { useState, useEffect, useRef } from "react";
-import { signOut } from "firebase/auth";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/pages/Home";
 import Flashcards from "./components/pages/Flashcards";
 import Inbox from "./components/pages/Inbox";
 import Login from "./components/pages/Login";
-import { auth } from "./components/Firebase/useFirebaseConfig";
+// import { auth } from "./components/Firebase/useFirebaseConfig";
 
 // MUI imports
 import Button from "@mui/material/Button";
@@ -226,18 +226,18 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [uid, setUid] = useState("");
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        if (isMountedRef.current) {
-          setIsLoggedIn(false);
-          setUid(""); // Reset the uid state variable
-        }
-      })
-      .catch((error) => {
-        console.log("Logout error:", error);
-      });
-  };
+  // const handleLogout = () => {
+  //   signOut(auth)
+  //     .then(() => {
+  //       if (isMountedRef.current) {
+  //         setIsLoggedIn(false);
+  //         setUid(""); // Reset the uid state variable
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log("Logout error:", error);
+  //     });
+  // };
   useEffect(() => {
     return () => {
       // Cleanup function to be executed when the component is unmounted
