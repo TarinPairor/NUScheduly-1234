@@ -1,243 +1,38 @@
-// import { ChangeEvent, useEffect, useState } from "react";
-// import {
-//   collection,
-//   getDoc,
-//   getDocs,
-//   setDoc,
-//   doc,
-//   addDoc,
-// } from "firebase/firestore";
-// import {
-//   getAuth,
-//   signInWithEmailAndPassword,
-//   signOut,
-//   onAuthStateChanged,
-// } from "firebase/auth";
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import Navbar from "./components/Navbar";
-// import Home from "./components/pages/Home";
-// import Flashcards from "./components/pages/Flashcards";
-// import useFirebaseConfig from "./components/Firebase/useFirebaseConfig";
-// import Inbox from "./components/pages/Inbox";
-import Members from "./components/pages/Members";
-// import "./App.css";
 import FlashcardList from "./components/pages/FlashcardList";
 import Collaborate from "./components/pages/Collab";
-
-// function App() {
-//   const { db } = useFirebaseConfig();
-//   const [, /*users*/ setUsers] = useState<{ id: string }[]>([]);
-//   const usersCollectionRef = collection(db, "users");
-//   const [uid, setUid] = useState<string>("");
-//   useEffect(() => {
-//     let isMounted = true; // Add a flag to track component mount state
-
-//     const getUsers = async () => {
-//       try {
-//         const data = await getDocs(usersCollectionRef);
-//         if (isMounted) {
-//           setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-//         }
-//         data.docs.map((user) => {
-//           console.log(user);
-//         });
-//       } catch (error) {
-//         console.log("Error fetching users:", error);
-//       }
-//     };
-
-//     getUsers();
-
-//     // Cleanup function to cancel async tasks and subscriptions
-//     return () => {
-//       isMounted = false;
-//     };
-//   }, []);
-
-//   ////
-//   const auth = getAuth();
-//   const [data, setData] = useState({
-//     email: "",
-//     password: "",
-//   });
-//   const [isLoggedIn, setIsLoggedIn] = useState(false); //login 0
-
-//   const handleInputs = (event: ChangeEvent<HTMLInputElement>) => {
-//     const inputs = { [event.target.name]: event.target.value };
-//     setData({ ...data, ...inputs });
-//   };
-//   ////
-//   const addData = async (e: { preventDefault: () => void }) => {
-//     e.preventDefault();
-//     try {
-//       const userCredential = await signInWithEmailAndPassword(
-//         auth,
-//         data.email,
-//         data.password
-//       );
-
-//       // Get the user ID
-//       const uid = userCredential.user.uid;
-//       setUid(uid);
-//       console.log(`uid: ${uid}`);
-
-//       // Retrieve the existing user document data
-//       const userRef = doc(db, "users", uid);
-//       const userDoc = await getDoc(userRef);
-//       console.log(`userDoc: ${userDoc.data()}`);
-
-//       if (userDoc.exists()) {
-//         console.log("successful login");
-
-//         // Update the document in the "users" collection
-//         await setDoc(userRef, { position: "student" }); // Update position to "student"
-//       } else {
-//         console.log("successful login, creating new entry in db");
-
-//         // Create a new document in the "users" collection with default values
-//         const newData = {
-//           email: data.email,
-//         };
-
-//         await setDoc(userRef, newData);
-//       }
-
-//       // Create a new task document in the "users/userId/tasks" collection
-//       const tasksCollectionRef = collection(db, `users/${uid}/tasks`);
-//       const taskData = null;
-
-//       const taskRef = await addDoc(tasksCollectionRef, taskData);
-//       console.log("New task document ID:", taskRef.id);
-
-//       setIsLoggedIn(true);
-//       console.log("Welcome to the Home page");
-//     } catch (error) {
-//       console.log("Login error:", error);
-//     }
-//   };
-
-//   const handleLogout = () => {
-//     signOut(auth)
-//       .then(() => {
-//         setIsLoggedIn(false);
-//         setUid(""); // Reset the uid state variable
-//       })
-//       .catch((error) => {
-//         console.log("Logout error:", error);
-//       });
-//   };
-
-//   useEffect(() => {
-//     const unsubscribe = onAuthStateChanged(auth, (user) => {
-//       if (user) {
-//         const uid = user.uid;
-//         setUid(uid);
-//         setIsLoggedIn(true);
-//       } else {
-//         setIsLoggedIn(false);
-//       }
-//     });
-
-//     return () => {
-//       unsubscribe();
-//     };
-//   }, [auth]);
-//   return (
-//     <div className="App-header">
-//       {isLoggedIn ? (
-//         <>
-//           <Router>
-//             <Navbar />
-//             <div className="content-wrapper">
-//               <Routes>
-//                 <Route path="/" element={<Home userId={uid} />} />
-//                 <Route
-//                   path="/flashcards"
-//                   element={<Flashcards userId={uid} />}
-//                 />
-//                 <Route
-//                   path="/flashcardlist"
-//                   element={<FlashcardList userId={uid} />}
-//                 />
-//                 <Route path="/inbox" element={<Inbox userId={uid} />} />
-//                 <Route path="/members" element={<Members />} />
-//                 <Route path="/collab" element={<Collaborate userId={uid} />} />
-//               </Routes>
-//             </div>
-//           </Router>
-//           <div className="logout-wrapper">
-//             <button onClick={handleLogout}>Log out</button>
-//           </div>
-//         </>
-//       ) : (
-//         <>
-//           <input
-//             placeholder="Email"
-//             name="email"
-//             type="email"
-//             className="input-fields"
-//             onChange={(event) => handleInputs(event)}
-//           />
-//           <input
-//             placeholder="Password"
-//             name="password"
-//             type="password"
-//             className="input-fields"
-//             onChange={(event) => handleInputs(event)}
-//           />
-
-//           <button onClick={addData}>Log In</button>
-//           <></>
-//         </>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default App;
-
-// import { signOut } from "firebase/auth";
 import { useState, useEffect, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/pages/Home";
 import Flashcards from "./components/pages/Flashcards";
 import Inbox from "./components/pages/Inbox";
+import SignUp from "./components/pages/Signup";
+import "./App.css";
+import Calendar from "./components/pages/Calendar";
 import Login from "./components/pages/Login";
-// import { auth } from "./components/Firebase/useFirebaseConfig";
 
 // MUI imports
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import SignUp from "./components/pages/Signup";
-import "./App.css";
-import Calendar from "./components/pages/Calendar";
 
 function App() {
+  // useRef hook to track whether the component is mounted or not
   const isMountedRef = useRef(true);
 
+  // useEffect hook to set isMountedRef to false when the component is unmounted
   useEffect(() => {
     return () => {
       isMountedRef.current = false;
     };
   }, []);
+
+  // State variables to manage sign up, login, and user authentication
   const [isSignUp, setIsSignUp] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [uid, setUid] = useState("");
 
-  // const handleLogout = () => {
-  //   signOut(auth)
-  //     .then(() => {
-  //       if (isMountedRef.current) {
-  //         setIsLoggedIn(false);
-  //         setUid(""); // Reset the uid state variable
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log("Logout error:", error);
-  //     });
-  // };
+  // useEffect hook with an empty dependency array, similar to componentDidMount
   useEffect(() => {
     return () => {
       // Cleanup function to be executed when the component is unmounted
@@ -245,20 +40,24 @@ function App() {
     };
   }, []);
 
+  // Function to toggle between Sign Up and Login mode
   const toggleMode = () => {
     setIsSignUp(!isSignUp);
   };
 
   return (
     <div className="App-header">
+      {/* If the user is not logged in, render either the Sign Up or Login component */}
       {!isLoggedIn &&
         (isSignUp ? (
           <SignUp setIsSignUp={setIsSignUp} />
         ) : (
           <Login setIsLoggedIn={setIsLoggedIn} setUid={setUid} />
         ))}
+
       {!isLoggedIn && (
         <>
+          {/* Render a button to toggle between Sign Up and Login mode */}
           <Container maxWidth="xs">
             <Box
               sx={{
@@ -284,13 +83,20 @@ function App() {
           </Container>
         </>
       )}
+
       <div>
+        {/* If the user is logged in, render the main content */}
         {isLoggedIn && (
           <>
+            {/* Set up the routing for different pages using react-router-dom */}
             <Router>
+              {/* Render the navigation bar */}
               <Navbar />
+
+              {/* Render the main content wrapper */}
               <div className="content-wrapper">
                 <Routes>
+                  {/* Set up routes for different pages */}
                   <Route path="/" element={<Home userId={uid} />} />
                   <Route
                     path="/flashcards"
@@ -301,7 +107,6 @@ function App() {
                     element={<FlashcardList userId={uid} />}
                   />
                   <Route path="/inbox" element={<Inbox userId={uid} />} />
-                  <Route path="/members" element={<Members />} />
                   <Route
                     path="/collab"
                     element={<Collaborate userId={uid} />}
