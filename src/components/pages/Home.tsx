@@ -113,6 +113,8 @@ function Home({ userId }: HomeProps) {
       year: "numeric",
       month: "long",
       day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
     };
     const formattedDate = dateObj.toLocaleString("en-US", options);
 
@@ -242,13 +244,10 @@ function Home({ userId }: HomeProps) {
           toDo
             .slice(0, 4)
             .sort((a, b) => {
-              const dateA = extractDate(a.date).split("-");
-              const dateB = extractDate(b.date).split("-");
+              const dateA = new Date(a.date).getTime(); // Convert to milliseconds
+              const dateB = new Date(b.date).getTime();
 
-              const numA = Number(dateA[0] + dateA[1] + dateA[2]);
-              const numB = Number(dateB[0] + dateB[1] + dateB[2]);
-
-              return numA - numB;
+              return dateA - dateB;
             })
             .map((task) => {
               return (
