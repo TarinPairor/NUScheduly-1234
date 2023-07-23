@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/en";
 import TextField from "@mui/material/TextField";
 
+// Interface for Home component's props
 interface HomeProps {
   userId: string;
 }
@@ -34,6 +35,7 @@ function Home({ userId }: HomeProps) {
   const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
+    // Fetch tasks from Firestore and subscribe to real-time changes
     const unsubscribe = onSnapshot(tasksRef, (snapshot) => {
       const tasks: Task[] = [];
       snapshot.forEach((doc) => {
@@ -43,6 +45,7 @@ function Home({ userId }: HomeProps) {
       setToDo(tasks);
     });
 
+    // Clean up the listener when the component unmounts
     return () => unsubscribe();
   }, [tasksRef, userId]);
 
@@ -50,6 +53,7 @@ function Home({ userId }: HomeProps) {
     return date1 >= date2;
   }
 
+  // Function to add a new task
   const addTask = async () => {
     if (!newTask) {
       setAlertMessage("Task must not be empty!");
@@ -84,14 +88,17 @@ function Home({ userId }: HomeProps) {
     }
   };
 
+  // Function to close the alert message
   const handleCloseAlert = () => {
     setAlertMessage("");
   };
 
+  // Function to handle date change for the date picker
   const handleDateChange = (newDate: Date | null) => {
     setSelectedDate(newDate);
   };
 
+  // Function to delete a task
   const deleteTask = async (documentId?: string) => {
     try {
       if (documentId) {
@@ -102,6 +109,7 @@ function Home({ userId }: HomeProps) {
     }
   };
 
+  // Function to extract formatted date from a string
   function extractDate(str: string): string {
     if (!str || typeof str !== "string") {
       return "";
@@ -120,6 +128,8 @@ function Home({ userId }: HomeProps) {
 
     return formattedDate;
   }
+
+  // Function to update a task
   const updateTask = async () => {
     if (updateData && updateData.documentId) {
       const { documentId, ...updatedData } = updateData; // Exclude the 'documentId' property
@@ -142,6 +152,7 @@ function Home({ userId }: HomeProps) {
     }
   };
 
+  // Function to cancel the task update
   const cancelUpdate = () => {
     setUpdateData(null);
   };

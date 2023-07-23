@@ -12,6 +12,7 @@ import useFirebaseConfig from "../Firebase/useFirebaseConfig";
 import Message from "../Message";
 // import Alert from "../Alert";
 
+// Interface to represent the structure of a message
 interface MessageData {
   id: string;
   title: string;
@@ -19,15 +20,17 @@ interface MessageData {
   date: Date;
   user: string;
 }
-
+// Interface for the Collaborate component's props
 interface CollaborateProps {
   userId: string;
 }
 
 function Collaborate({ userId }: CollaborateProps) {
+  // Get the Firestore instance from the custom hook
   const { db } = useFirebaseConfig();
-  const messagesRef = collection(db, "messages");
 
+  // References to Firestore collections and states for messages
+  const messagesRef = collection(db, "messages");
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [newMessage, setNewMessage] = useState<MessageData>({
     id: "", // Use empty string as a temporary key for new messages
@@ -38,6 +41,7 @@ function Collaborate({ userId }: CollaborateProps) {
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Fetch messages from Firestore and update state
   useEffect(() => {
     const fetchMessages = async () => {
       const q = query(messagesRef, orderBy("date", "desc"));
@@ -57,6 +61,7 @@ function Collaborate({ userId }: CollaborateProps) {
     fetchMessages();
   }, [messagesRef]);
 
+  // Handle changes in the form inputs
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -66,6 +71,7 @@ function Collaborate({ userId }: CollaborateProps) {
     });
   };
 
+  // Handle form submission to add a new message
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -90,6 +96,7 @@ function Collaborate({ userId }: CollaborateProps) {
     }
   };
 
+  // Handle deletion of a message by its ID
   const handleDeleteMessage = async (messageId: string) => {
     try {
       await deleteDoc(doc(db, "messages", messageId));

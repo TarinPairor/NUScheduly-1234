@@ -9,30 +9,38 @@ import {
 import { FaTrashAlt } from "react-icons/fa";
 import "./FlashcardList.css";
 
+// Interface for FlashcardList component's props
 interface FlashcardListProps {
   userId: string;
 }
 
 function FlashcardList({ userId }: FlashcardListProps) {
+  // State to store flashcard data
   const [cards, setCards] = useState<any[]>([]);
   const db = getFirestore();
   const flashcardsRef = collection(db, `users/${userId}/flashcards`);
 
+  // Fetch flashcards from Firestore when the component mounts
   useEffect(() => {
+    // Subscribe to real-time changes in the flashcards collection
     const unsubscribe = onSnapshot(flashcardsRef, (snapshot) => {
       const flashcards: any[] = [];
       snapshot.forEach((doc) => {
+        // Extract the document ID and data from the snapshot
         const flashcard = { id: doc.id, ...doc.data() };
         flashcards.push(flashcard);
       });
       setCards(flashcards);
     });
 
+    // Clean up the listener when the component unmounts
     return () => unsubscribe();
   }, [flashcardsRef, userId]);
 
+  // Function to handle deleting a flashcard by its ID
   const handleDeleteCard = async (cardId: string) => {
     try {
+      // Delete the flashcard document from Firestore
       await deleteDoc(doc(flashcardsRef, cardId));
       console.log("Flashcard deleted:", cardId);
     } catch (error) {

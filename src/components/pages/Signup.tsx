@@ -29,6 +29,7 @@ const SignUp: React.FC<SignUpProps> = ({ setIsSignUp }) => {
   const [accExists, setAccExists] = useState<boolean>(false);
   const [shortPw, setShortPw] = useState<boolean>(false);
 
+  // Handle form submission (signup)
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     console.log(email, password);

@@ -10,12 +10,18 @@ interface MonthlyCalendarProps {
 }
 
 function Calendar({ userId }: MonthlyCalendarProps) {
+  // Set the locale to 'en' for dayjs library
   dayjs.locale("en");
+
+  // State to store tasks and the selected date
   const [tasks, setTasks] = useState<Task[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  // Initialize Firestore and reference to tasks collection
   const db = getFirestore();
   const tasksRef = collection(db, `users/${userId}/tasks`);
 
+  // Fetch tasks from Firestore when the component mounts
   useEffect(() => {
     const unsubscribe = onSnapshot(tasksRef, (snapshot) => {
       const tasks: Task[] = [];
@@ -26,6 +32,7 @@ function Calendar({ userId }: MonthlyCalendarProps) {
       setTasks(tasks);
     });
 
+    // Unsubscribe from the Firestore snapshot listener when the component unmounts
     return () => unsubscribe();
   }, [tasksRef, userId]);
 

@@ -10,13 +10,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import Task from "../Interfaces/Task";
 
+// Interface for Inbox component's props
 interface InboxProps {
   userId: string;
 }
 
 function Inbox({ userId }: InboxProps) {
-  const [, setToDo] = useState<Task[]>([]);
+  const [, setToDo] = useState<Task[]>([]); // Unused state variable, consider removing it
 
+  // Function to delete a task
   const deleteTask = async (documentId?: string) => {
     try {
       if (documentId) {
@@ -28,10 +30,12 @@ function Inbox({ userId }: InboxProps) {
     }
   };
 
+  // State to store the tasks
   const [tasks, setTasks] = useState<Task[]>([]);
   const db = getFirestore();
   const tasksRef = collection(db, `users/${userId}/tasks`);
 
+  // Fetch tasks from Firestore and subscribe to real-time changes
   useEffect(() => {
     const unsubscribe = onSnapshot(tasksRef, (snapshot) => {
       const tasks: Task[] = [];
@@ -42,9 +46,11 @@ function Inbox({ userId }: InboxProps) {
       setTasks(tasks);
     });
 
+    // Clean up the listener when the component unmounts
     return () => unsubscribe();
-  }, [tasksRef, userId, tasks]);
+  }, [tasksRef, userId, tasks]); // Add userId as a dependency
 
+  // Function to extract formatted date from a string
   function extractDate(str: string): string {
     if (!str || typeof str !== "string") {
       return "";

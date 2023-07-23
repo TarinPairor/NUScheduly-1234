@@ -30,6 +30,7 @@ interface LoginProps {
   setUid: React.Dispatch<React.SetStateAction<string>>;
 }
 
+// Interface for user data stored in the "users" collection
 interface UserData {
   xp: number;
   position: string;
@@ -37,17 +38,19 @@ interface UserData {
 
 export default function Login({ setIsLoggedIn, setUid }: LoginProps) {
   const { db } = useFirebaseConfig();
-  const [isWrong] = useState<boolean>(false);
+  const [isWrong] = useState<boolean>(false); // State to control wrong password message
 
-  // current database of users
+  // State to store the list of users from Firestore
   const [users, setUsers] = useState<DocumentData[]>([]);
   const usersCollectionRef = collection(db, "users");
 
+  // Fetch users from Firestore and store them in the state
   useEffect(() => {
     const getUsers = async () => {
       const data = await getDocs(usersCollectionRef);
       setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
 
+      // For debugging purposes, log each user
       users.map((user) => {
         console.log(user);
       });
@@ -56,17 +59,20 @@ export default function Login({ setIsLoggedIn, setUid }: LoginProps) {
     getUsers();
   }, []);
 
+  // Firebase authentication
   const auth = getAuth();
   const [data, setData] = useState<{ email: string; password: string }>({
     email: "",
     password: "",
   });
 
+  // Handle input changes for email and password fields
   const handleInputs = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputs = { [event.target.name]: event.target.value };
     setData({ ...data, ...inputs });
   };
 
+  // Function to handle form submission (login)
   const addData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -129,16 +135,20 @@ export default function Login({ setIsLoggedIn, setUid }: LoginProps) {
     }
   };
 
+  // Listen to authentication state changes to handle login/logout
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        // User is logged in
         //setIsLoggedIn(true);
         // const uid = user.uid;
       } else {
+        // User is logged out
         setIsLoggedIn(false);
       }
     });
 
+    // Format taken from https://github.com/mui/material-ui/blob/v5.13.2/docs/data/material/getting-started/templates/sign-in/SignIn.js
     return () => {
       unsubscribe();
     };

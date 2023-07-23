@@ -11,11 +11,13 @@ import {
   addDoc,
 } from "firebase/firestore";
 
+// Interface for Flashcards component's props
 interface FlashcardsProps {
   userId: string;
 }
 
 function Flashcards({ userId }: FlashcardsProps) {
+  // State to store flashcard data
   const [cards, setCards] = useState<any[]>([]);
   const [currentCard, setCurrentCard] = useState<any>({});
   const [newCard, setNewCard] = useState<any>({
@@ -26,10 +28,12 @@ function Flashcards({ userId }: FlashcardsProps) {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
+  // Firestore database reference and collection reference
   const db = getFirestore();
   const flashcardsRef = collection(db, `users/${userId}/flashcards`);
 
   useEffect(() => {
+    // Fetch flashcards from Firestore and subscribe to real-time changes
     const unsubscribe = onSnapshot(flashcardsRef, (snapshot) => {
       const flashcards: any[] = [];
       snapshot.forEach((doc) => {
@@ -38,14 +42,17 @@ function Flashcards({ userId }: FlashcardsProps) {
       });
       setCards(flashcards);
 
+      // If currentCard is empty or not valid, update it with a random card
       if (!currentCard.eng || !currentCard.han || !currentCard.pin) {
         setCurrentCard(getRandomCard(flashcards));
       }
     });
 
+    // Clean up the listener when the component unmounts
     return () => unsubscribe();
   }, [flashcardsRef, userId, currentCard]);
 
+  // Function to get a random card from the cards array
   const getRandomCard = (currentCards: any[]): any => {
     if (currentCards.length === 0) {
       return null;
@@ -56,6 +63,7 @@ function Flashcards({ userId }: FlashcardsProps) {
     return filteredCards[randomIndex];
   };
 
+  // Function to update the current card
   const updateCard = () => {
     if (cards.length === 0) {
       setAlertMessage("Card list is empty!");
@@ -72,6 +80,7 @@ function Flashcards({ userId }: FlashcardsProps) {
     console.log(cards.length);
   };
 
+  // Function to handle input change for new card form
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewCard({
       ...newCard,
@@ -79,6 +88,7 @@ function Flashcards({ userId }: FlashcardsProps) {
     });
   };
 
+  // Function to add a new card to the database
   const addCard = async () => {
     if (!newCard.eng || !newCard.han || !newCard.pin) {
       setShowAlert(true);
@@ -95,6 +105,7 @@ function Flashcards({ userId }: FlashcardsProps) {
     }
   };
 
+  // Function to close the alert message
   const closeAlert = () => {
     setShowAlert(false);
     setAlertMessage("");
