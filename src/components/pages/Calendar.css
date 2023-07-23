@@ -63,7 +63,7 @@
 
 .task-time {
   font-size: 10px;
-  color: #888;
+  color: rgb(252, 250, 250);
   margin: 10px; /* Add some spacing between the task title and time */
 }
 
