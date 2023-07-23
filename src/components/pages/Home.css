@@ -62,6 +62,7 @@ h2 {
 .iconsWrap {
   display: flex;
   justify-content: flex-end;
+  color: black;
 }
 
 .iconsWrap span {
