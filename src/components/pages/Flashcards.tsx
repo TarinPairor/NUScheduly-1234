@@ -11,7 +11,6 @@ import {
   addDoc,
 } from "firebase/firestore";
 
-import TextField from "@mui/material/TextField";
 interface FlashcardsProps {
   userId: string;
 }
@@ -103,11 +102,6 @@ function Flashcards({ userId }: FlashcardsProps) {
 
   return (
     <div className="Flashcards">
-      {showAlert && (
-        <Alert onClose={closeAlert} severity="info">
-          {alertMessage}
-        </Alert>
-      )}
       <div className="cardRow">
         {currentCard &&
         currentCard.eng &&
@@ -123,28 +117,36 @@ function Flashcards({ userId }: FlashcardsProps) {
         )}
       </div>
       <div className="buttonRow">
+        {showAlert && (
+          <Alert onClose={closeAlert} severity="info">
+            {alertMessage}
+          </Alert>
+        )}
         <div className="drawCard">
           <DrawButton drawCard={updateCard} />
         </div>
         <br></br>
         <div className="addCardForm">
-          <TextField
-            id="eng"
-            label="Front"
+          <input
+            type="text"
+            name="eng"
             value={newCard.eng}
             onChange={handleInputChange}
+            placeholder="Front"
           />
-          <TextField
-            id="han"
-            label="Back"
+          <input
+            type="text"
+            name="han"
             value={newCard.han}
             onChange={handleInputChange}
+            placeholder="Back"
           />
-          <TextField
-            id="pin"
-            label="Description"
+          <input
+            type="text"
+            name="pin"
             value={newCard.pin}
             onChange={handleInputChange}
+            placeholder="Description"
           />
           <button onClick={addCard}>Add Card</button>
         </div>
