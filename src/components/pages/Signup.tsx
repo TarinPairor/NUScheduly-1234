@@ -10,12 +10,14 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import BasicAlerts from "../Alert";
 
 import {
   getAuth,
   createUserWithEmailAndPassword,
   UserCredential,
 } from "firebase/auth";
+// import { Alert } from "@mui/material";
 
 interface SignUpProps {
   setIsSignUp: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,6 +27,7 @@ const SignUp: React.FC<SignUpProps> = ({ setIsSignUp }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const auth = getAuth();
+  const [alertMessage, setAlertMessage] = useState("");
 
   const [accExists, setAccExists] = useState<boolean>(false);
   const [shortPw, setShortPw] = useState<boolean>(false);
@@ -59,6 +62,7 @@ const SignUp: React.FC<SignUpProps> = ({ setIsSignUp }) => {
         }
         const errorCode = error.code;
         console.log(errorCode);
+        setAlertMessage("invalid input");
         // ..
       });
   };
@@ -66,6 +70,13 @@ const SignUp: React.FC<SignUpProps> = ({ setIsSignUp }) => {
   // format taken from https://github.com/mui/material-ui/blob/v5.13.2/docs/data/material/getting-started/templates/sign-in/SignIn.js
   return (
     <>
+      <div>
+        {alertMessage && (
+          <BasicAlerts onClose={() => setAlertMessage("")}>
+            {alertMessage}
+          </BasicAlerts>
+        )}
+      </div>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
