@@ -1,0 +1,30 @@
+/* Styles for the Inbox component */
+.Inbox {
+  padding: 20px;
+}
+
+.task {
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.taskText {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.trash-icon {
+  font-size: 18px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+/* Hover state of the trash icon */
+.trash-icon:hover {
+  color: red;
+}

@@ -9,6 +9,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import Task from "../Interfaces/Task";
+import "./Inbox.css";
 
 // Interface for Inbox component's props
 interface InboxProps {
@@ -96,7 +97,12 @@ function Inbox({ userId }: InboxProps) {
               {task.title} {extractDate(task.date)}
             </span>
             <br />
-            <span title="Trash" onClick={() => deleteTask(task.documentId)}>
+
+            <span
+              title="Trash"
+              onClick={() => deleteTask(task.documentId)}
+              className="trash-icon"
+            >
               <FontAwesomeIcon icon={faTrashAlt} />
             </span>
           </div>

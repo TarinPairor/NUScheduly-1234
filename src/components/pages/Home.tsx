@@ -152,6 +152,7 @@ function Home({ userId }: HomeProps) {
         }
 
         const { documentId, ...updatedData } = updateData; // Exclude the 'documentId' property
+        updatedData.date = selectedDate.toISOString(); // Update the date in updatedData
         await updateDoc(doc(tasksRef, documentId), updatedData);
         const updatedTasks = toDo.map((task) => {
           if (task.id === updateData.id) {
