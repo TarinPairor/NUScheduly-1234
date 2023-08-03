@@ -33,8 +33,7 @@ interface LoginProps {
 
 // Interface for user data stored in the "users" collection
 interface UserData {
-  xp: number;
-  position: string;
+  email: string;
 }
 
 export default function Login({ setIsLoggedIn, setUid }: LoginProps) {
@@ -98,11 +97,10 @@ export default function Login({ setIsLoggedIn, setUid }: LoginProps) {
         // Document exists, retrieve existing data
         const existingData: UserData = userDoc.data() as UserData;
 
-        // Merge the existing data with the new data, while preserving the existing "xp" value
+        // Merge the existing data with the new data, while preserving the existing "email" value
         const newData: UserData = {
           ...existingData,
-          xp: existingData.xp,
-          position: existingData.position, // Add any additional user data fields you want to update or add
+          email: data.email, // Add any additional user data fields you want to update or add
         };
 
         console.log("successful login");
@@ -111,8 +109,7 @@ export default function Login({ setIsLoggedIn, setUid }: LoginProps) {
       } else {
         // Document does not exist, create a new document with default values
         const newData: UserData = {
-          xp: 0,
-          position: "normal", // Add any additional user data fields you want to store
+          email: data.email, // Add any additional user data fields you want to store
         };
 
         console.log("successful login, creating new entry in db");
