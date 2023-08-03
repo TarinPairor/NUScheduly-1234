@@ -24,6 +24,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Backdrop from "@mui/material/Backdrop";
+import BasicAlerts from "../Alert";
 
 interface LoginProps {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,6 +40,7 @@ interface UserData {
 export default function Login({ setIsLoggedIn, setUid }: LoginProps) {
   const { db } = useFirebaseConfig();
   const [isWrong] = useState<boolean>(false); // State to control wrong password message
+  const [alertMessage, setAlertMessage] = useState("");
 
   // State to store the list of users from Firestore
   const [users, setUsers] = useState<DocumentData[]>([]);
@@ -121,6 +123,7 @@ export default function Login({ setIsLoggedIn, setUid }: LoginProps) {
       setIsLoggedIn(true);
     } catch (error) {
       console.log("Login error:", error);
+      setAlertMessage("Login error, try again!");
       /*
       if (
         error.code === "auth/wrong-password" ||
@@ -157,6 +160,11 @@ export default function Login({ setIsLoggedIn, setUid }: LoginProps) {
   // format taken from https://github.com/mui/material-ui/blob/v5.13.2/docs/data/material/getting-started/templates/sign-in/SignIn.js
   return (
     <>
+      {alertMessage && (
+        <BasicAlerts onClose={() => setAlertMessage("")}>
+          {alertMessage}
+        </BasicAlerts>
+      )}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
