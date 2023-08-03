@@ -132,8 +132,26 @@ function Home({ userId }: HomeProps) {
   // Function to update a task
   const updateTask = async () => {
     if (updateData && updateData.documentId) {
-      const { documentId, ...updatedData } = updateData; // Exclude the 'documentId' property
       try {
+        if (!updateData.title) {
+          setAlertMessage("Task must not be empty!");
+          return;
+        }
+        if (!selectedDate) {
+          setAlertMessage("Must select a date!");
+          return;
+        }
+
+        const currentDate = new Date();
+        const currentDateString = currentDate.toISOString().substring(0, 10);
+        const selectedDateString = selectedDate.toISOString().substring(0, 10);
+
+        if (!compareDates(selectedDateString, currentDateString)) {
+          setAlertMessage("Date must be after today!");
+          return;
+        }
+
+        const { documentId, ...updatedData } = updateData; // Exclude the 'documentId' property
         await updateDoc(doc(tasksRef, documentId), updatedData);
         const updatedTasks = toDo.map((task) => {
           if (task.id === updateData.id) {
@@ -146,6 +164,8 @@ function Home({ userId }: HomeProps) {
         });
         setToDo(updatedTasks);
         setUpdateData(null);
+        setSelectedDate(null); // Clear selectedDate after update
+        setAlertMessage(""); // Clear any previous error message
       } catch (error) {
         console.error("Error updating task:", error);
       }
@@ -195,7 +215,15 @@ function Home({ userId }: HomeProps) {
                 className="form-control form-control-lg"
               />
             </div>
-            <div className="col"></div>
+            <div className="col">
+              {/* Display DatePickerValue for the selected date */}
+              <div className="datePickerContainer">
+                <DatePickerValue
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                />
+              </div>
+            </div>
             <div className="col-auto">
               <button
                 onClick={updateTask}
