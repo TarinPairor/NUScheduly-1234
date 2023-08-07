@@ -58,7 +58,9 @@ function Flashcards({ userId }: FlashcardsProps) {
       return null;
     }
 
-    const filteredCards = currentCards.filter((card) => card !== currentCard);
+    const filteredCards = currentCards.filter(
+      (card) => card.id !== currentCard.id
+    );
     const randomIndex = Math.floor(Math.random() * filteredCards.length);
     return filteredCards[randomIndex];
   };
