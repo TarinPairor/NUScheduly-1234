@@ -54,16 +54,14 @@ function Flashcards({ userId }: FlashcardsProps) {
 
   // Function to get a random card from the cards array
   const getRandomCard = (currentCards: any[]): any => {
-    if (currentCards.length === 0) {
-      return null;
-    }
+  if (currentCards.length === 0) {
+    return null;
+  }
 
-    const filteredCards = currentCards.filter(
-      (card) => card.id !== currentCard.id
-    );
-    const randomIndex = Math.floor(Math.random() * filteredCards.length);
-    return filteredCards[randomIndex];
-  };
+  const filteredCards = currentCards.filter((card) => card.id !== currentCard.id);
+  const randomIndex = Math.floor(Math.random() * filteredCards.length);
+  return filteredCards[randomIndex];
+};
 
   // Function to update the current card
   const updateCard = () => {
